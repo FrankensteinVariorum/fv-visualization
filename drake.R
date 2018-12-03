@@ -9,11 +9,16 @@ library(tidyverse)
 library(xml2)
 library(fs)
 library(digest)
+library(rematch2)
+library(stringdist)
+library(tidytext)
+library(ggpage)
 
 spine_dir <- "fv-data/standoff_Spine/"
 
 # Load all functions
 dir_walk("R", source)
+dir_create("xmlcache")
 
 spinefiles <- dir_ls(spine_dir, glob = "*.xml") %>% as.character()
 
@@ -36,11 +41,17 @@ generic_spine_plan <- drake_plan(spine = get_chunk_table(file_in("file__")))
 expanded_spine_plan <- evaluate_plan(generic_spine_plan, wildcard = "file__", values = spinefiles)
 spine_plan <- gather_plan(expanded_spine_plan, target = "raw_spine", gather = "rbind", append = TRUE)
 
+spine_shaping <- drake_plan(
+  reshaped_spine = reshape_spine(raw_spine),
+  app_attributes = app_features(reshaped_spine),
+  app_pages = app_page_build(app_attributes),
+  app_plot = app_page_plot(app_pages)
+)
+
 fv_plan <- bind_plans(
-  spine_plan
+  spine_plan,
+  spine_shaping
 )
 
 fv_plan
-
-make(fv_plan)
 
