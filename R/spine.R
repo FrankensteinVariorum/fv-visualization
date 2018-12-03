@@ -1,24 +1,17 @@
-# Collect reading groups from an app
-read_one_spine <- function(spinefile) {
-  safe_reader <- (get_chunk_table)
-  
-  spine_names <- path_file(spinefiles)
-  res <- spinefiles %>% 
-    set_names(spine_names) %>% 
-    map(get_chunk_table)
-  
-  ordered_res <- res %>%
-    mutate(
-      cid = str_match(app_ids, "C(\\d{2})")[,2] %>% as.integer(),
-      subcid = str_match(app_ids, "([a-z])_")[,2] %>% match(letters) %>% as.integer() %>% coalesce(1L),
-      aid = str_match(app_ids, "app(\\d+)")[,2] %>% as.integer()
-    ) %>% 
-    arrange(cid, subcid, aid)
+# Cache all referenced edition files
+parsed_references <- function(spinefile) {
+  read_xml(spinefile) %>% 
+    xml_ns_strip() %>% 
+    xml_find_all(".//ptr") %>% 
+    xml_attr("target") %>% 
+    url_parse() %>% 
+    filter(str_detect(path, "PghFrankenstein"))
 }
 
-get_chunk_table <- function(chunkfile) {
+# Collect all the text of pointers from a spine file
+get_chunk_table <- function(spinefile) {
   # get all apps
-  apps <- read_xml(chunkfile) %>% 
+  apps <- read_xml(spinefile) %>% 
     xml_ns_strip() %>% 
     xml_find_all(".//app")
   
@@ -63,9 +56,27 @@ get_ptr_contents <- function(ptr) {
   
   ptr_xml_id <- url_parse(ptr)$fragment
   
-  rdg_contents <- path("fv-data/edition-chunks/", ptr_file) %>% 
+  retrieve_pointer_text(ptr, ptr_xml_id)
+}
+
+retrieve_pointer_text <- function(xmlfile, pointer_id) {
+  if (str_detect(xmlfile, "github")) {
+    xmlfile <- path("xmlcache", basename(url_parse(xmlfile)$path))
+  }
+  
+  xmlfile %>% 
     read_xml() %>% 
-    xml_ns_strip() %>% 
-    xml_find_first(str_glue(".//seg[@xml:id='{ptr_xml_id}']")) %>% 
+    xml_find_first(str_glue('.//*[@xml:id="{pointer_id}"]')) %>% 
     xml_text()
+}
+
+# Tidy spine outputs
+
+tidy_spine <- function(spine_df) {
+  spine_df %>%
+    mutate(
+      cid = str_match(app_ids, "C(\\d{2})")[,2] %>% as.integer(),
+      subcid = str_match(app_ids, "([a-z])_")[,2] %>% match(letters) %>% as.integer() %>% coalesce(1L),
+      aid = str_match(app_ids, "app(\\d+)")[,2] %>% as.integer()
+    )
 }
