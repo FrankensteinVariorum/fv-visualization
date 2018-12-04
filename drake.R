@@ -8,7 +8,6 @@ library(drake)
 library(tidyverse)
 library(xml2)
 library(fs)
-library(digest)
 library(rematch2)
 library(stringdist)
 library(tidytext)
@@ -16,7 +15,6 @@ library(ggpage)
 
 # Load all functions
 dir_walk("R", source)
-dir_create("xmlcache")
 
 # P1 collations ----
 
