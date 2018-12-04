@@ -1,14 +1,19 @@
-reshape_spine <- function(raw_spine) {
-  raw_spine %>% 
+order_apps <- function(full_df) {
+  full_df %>% 
     bind_re_match(app_ids, pattern = "^C(?<chunkid>\\d{2})(?<subchunk>[a-z])?_app(?<appid>\\d+)") %>% 
     as_tibble() %>% 
     mutate(subchunk = coalesce(match(subchunk, letters), 1L)) %>% 
     mutate_at(vars(chunkid, appid), as.integer) %>% 
-    mutate(witness_id = factor(witness_id, levels = c("#f1818", "#f1823", "#fThomas", "#f1831"), ordered = TRUE)) %>% 
+    mutate(witness_id = factor(witness_id, levels = c("f1818", "f1823", "fThomas", "fMS", "f1831"), ordered = TRUE)) %>% 
+    complete(witness_id, nesting(app_ids, chunkid, subchunk, appid), fill = list(content = "")) %>%
     arrange(chunkid, subchunk, appid, witness_id)
 }
 
-app_features <- function(rehsaped_spine) {
+pairwise_app_comparison <- function(ordered_apps) {
+  
+}
+
+app_features <- function(reshaped_spine) {
   reshaped_spine %>% 
     group_by(app_ids) %>% 
     mutate(
@@ -22,14 +27,15 @@ app_features <- function(rehsaped_spine) {
     )
 }
 
-app_page_build <- function(app_attributes) {
+app_page_build <- function(app_attributes, ...) {
   un_apps <- app_attributes %>% 
     unnest_tokens(output = word, input = text)
   
-  ggpage_build(un_apps$word) %>% 
+  ggpage_build(un_apps$word, ...) %>% 
     bind_cols(un_apps) 
 }
 
 app_page_plot <- function(app_pages) {
-  ggpage_plot(app_pages, aes(fill = log_max_app_edit_distance))
+  ggpage_plot(app_pages, aes(fill = log_max_app_edit_distance)) +
+    scale_fill_viridis_c(na.value = "#2E0A40")
 }
