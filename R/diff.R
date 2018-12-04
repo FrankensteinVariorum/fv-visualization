@@ -83,8 +83,27 @@ app_page_plot <- function(app_pages) {
 synoptic_app_page_build <- function(ordered_apps, pariwise_app_differences, reference_witness = "fThomas") {
   source_differences <- pariwise_app_differences %>% 
     filter(source == reference_witness)
+  
+  target_app_contents <- ordered_apps %>% 
+    filter(witness_id == "f1818")
+  
+  target_distances <- source_differences %>% 
+    filter(target == "f1818")
 }
 
-single_diff_plot <- function(ordered_apps) {
+single_diff_plot <- function(target_app_contents, target_distances) {
+  bound_apps <- target_app_contents %>% 
+    left_join(target_distances, by = c("app_ids" = "app_id")) %>% 
+    rename(text = content) %>% 
+    mutate_at(vars(additions, deletions), scales::rescale) %>% 
+    mutate(composite = additions - deletions,
+           magnitude = additions + deletions)
   
+  unbound_apps <- unnest_tokens(bound_apps, output = word, input = text)
+  
+  page_layout <- ggpage_build(bound_apps) %>% 
+    bind_cols(unbound_apps)
+  
+  ggpage_plot(page_layout, aes(fill = composite, alpha = magnitude)) + 
+    scale_fill_gradient2(low = "red", mid = "yellow", high = "green")
 }
