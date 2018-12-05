@@ -134,7 +134,7 @@ single_diff_ggpage <- function(target_app_contents, target_distances, ...) {
     bind_cols(unbound_apps)
   
   ggpage_plot(page_layout, aes(fill = composite, alpha = magnitude), paper.limits = 0.1) + 
-    scale_fill_gradient2(low = "red", mid = "yellow", high = "green") +
+    scale_fill_gradient2(low = "green", mid = "yellow", high = "red") +
     scale_alpha_continuous(range = c(0.5, 1)) +
     ggtitle(str_glue("{source} -> {target}")) +
     theme(legend.position = "none")
@@ -172,7 +172,7 @@ heatmap_plot <- function(heatmap_df) {
   ggplot(compiled_df, aes(x = source, y = index, fill = composite, alpha = magnitude)) + 
     facet_wrap(~ target, ncol = 1, scales = "free_y") + 
     geom_raster() +
-    scale_fill_gradient2(low = "red", mid = "yellow", high = "green", na.value = "gray30") +
+    scale_fill_gradient2(low = "green", mid = "yellow", high = "red", na.value = "gray30") +
     scale_alpha_continuous(range = c(0.1, 1)) +
     theme_minimal()
   
