@@ -84,26 +84,36 @@ synoptic_app_page_build <- function(ordered_apps, pariwise_app_differences, refe
   source_differences <- pariwise_app_differences %>% 
     filter(source == reference_witness)
   
-  target_app_contents <- ordered_apps %>% 
-    filter(witness_id == "f1818")
+  plot_list <- map(levels(source_differences$target), function(x) {
+    target_app_contents <- ordered_apps %>% 
+      filter(witness_id == x)
+    
+    target_distances <- source_differences %>% 
+      filter(target == x)
+    
+    single_diff_plot(target_app_contents, target_distances)
+  })
   
-  target_distances <- source_differences %>% 
-    filter(target == "f1818")
 }
 
-single_diff_plot <- function(target_app_contents, target_distances) {
+single_diff_plot <- function(target_app_contents, target_distances, ...) {
   bound_apps <- target_app_contents %>% 
     left_join(target_distances, by = c("app_ids" = "app_id")) %>% 
     rename(text = content) %>% 
-    mutate_at(vars(additions, deletions), scales::rescale) %>% 
+    mutate_at(vars(additions, deletions), log) %>% 
+    mutate_at(vars(additions, deletions), funs(scales::rescale(if_else(is.infinite(.), NA_real_, .)))) %>% 
     mutate(composite = additions - deletions,
-           magnitude = additions + deletions)
+           magnitude = log(additions + deletions)) %>% 
+    mutate_at(vars(magnitude), funs(coalesce(., -0.1)))
+  
+  min(bound_apps$magnitude)
   
   unbound_apps <- unnest_tokens(bound_apps, output = word, input = text)
   
   page_layout <- ggpage_build(bound_apps) %>% 
     bind_cols(unbound_apps)
   
-  ggpage_plot(page_layout, aes(fill = composite, alpha = magnitude)) + 
-    scale_fill_gradient2(low = "red", mid = "yellow", high = "green")
+  ggpage_plot(page_layout, aes(fill = composite, alpha = magnitude), paper.limits = 0.1) + 
+    scale_fill_gradient2(low = "red", mid = "yellow", high = "green") +
+    scale_alpha_continuous(range = c(0.1, 1))
 }
