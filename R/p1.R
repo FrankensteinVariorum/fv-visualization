@@ -5,13 +5,13 @@ read_P1 <- function(xmlfile) {
     xml_find_all(".//d1:app") %>% 
     set_names(xml_attr(., "id"))
   
-  map_df(apps, harvest_app, .id = "app_ids") 
+  map_df(apps, harvest_app, .id = "app") 
 }
 
 harvest_app <- function(app) {
   readings <- app %>% xml_find_all(".//d1:rdg")
-  witness_id <- readings %>% xml_attr("wit")
-  content <- readings %>% xml_text() %>% str_replace_all("<.+?>", "")
+  witness <- readings %>% xml_attr("wit")
+  text <- readings %>% xml_text() %>% str_replace_all("<.+?>", "")
   
-  tibble(witness_id, content)
+  tibble(witness, text)
 }

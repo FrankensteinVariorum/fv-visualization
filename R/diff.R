@@ -1,12 +1,13 @@
 order_apps <- function(full_df) {
   full_df %>% 
-    bind_re_match(app_ids, pattern = "^C(?<chunkid>\\d{2})(?<subchunk>[a-z])?_app(?<appid>\\d+)") %>% 
+    bind_re_match(app, pattern = "^C(?<chunk>\\d{2})(?<subchunk>[a-z])?_app(?<index>\\d+)") %>% 
     as_tibble() %>% 
     mutate(subchunk = coalesce(match(subchunk, letters), 1L)) %>% 
-    mutate_at(vars(chunkid, appid), as.integer) %>% 
-    mutate(witness_id = factor(witness_id, levels = c("f1818", "f1823", "fThomas", "fMS", "f1831"), ordered = TRUE)) %>% 
-    complete(witness_id, nesting(app_ids, chunkid, subchunk, appid), fill = list(content = "")) %>%
-    arrange(chunkid, subchunk, appid, witness_id)
+    mutate_at(vars(chunk, index), as.integer) %>% 
+    mutate(witness = factor(witness, levels = c("f1818", "f1823", "fThomas", "fMS", "f1831"), ordered = TRUE)) %>% 
+    complete(witness, nesting(app, chunk, subchunk, index), fill = list(text = "")) %>%
+    arrange(chunk, subchunk, index, witness) %>% 
+    mutate(app = factor(app, levels = unique(app), ordered = TRUE))
 }
 
 lv_wrapper <- function(x, weight) {
