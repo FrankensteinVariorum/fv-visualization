@@ -102,7 +102,7 @@ synoptic_app_page_build <- function(ordered_apps, pairwise_app_differences, refe
     target_distances <- source_differences %>% 
       filter(target == x)
     
-    single_diff_plot(target_app_contents, target_distances, ...)
+    single_diff_ggpage(target_app_contents, target_distances, ...)
   })
 }
 
@@ -111,18 +111,22 @@ floorless <- function(x) {
   if_else(x <= cutoff, 0, x)
 }
 
-single_diff_plot <- function(target_app_contents, target_distances, ...) {
-  source <- first(target_distances$source)
-  target <- first(target_distances$target)
-  
-  bound_apps <- target_app_contents %>% 
-    left_join(target_distances, by = "app") %>% 
-    mutate(transformed_value = floorless(rescale(log10(value + 1)))) %>% 
+composite_changes <- function(contents, distances) {
+  contents %>% 
+    left_join(distances, by = "app") %>% 
+    mutate(transformed_value = rescale(log10(value + 1))) %>% 
     select(-value) %>% 
     spread(edit_type, transformed_value) %>% 
     mutate(composite = char_additions - char_deletions,
            magnitude = char_additions + char_deletions,
            composite = if_else(magnitude == 0, NA_real_, composite))
+}
+
+single_diff_ggpage <- function(target_app_contents, target_distances, ...) {
+  source <- first(target_distances$source)
+  target <- first(target_distances$target)
+  
+  bound_apps <- composite_changes(target_app_contents, target_distances)
   
   unbound_apps <- unnest_tokens(bound_apps, output = word, input = text)
   
@@ -132,5 +136,44 @@ single_diff_plot <- function(target_app_contents, target_distances, ...) {
   ggpage_plot(page_layout, aes(fill = composite, alpha = magnitude), paper.limits = 0.1) + 
     scale_fill_gradient2(low = "red", mid = "yellow", high = "green") +
     scale_alpha_continuous(range = c(0.5, 1)) +
-    ggtitle(str_glue("{source} -> {target}"))
+    ggtitle(str_glue("{source} -> {target}")) +
+    theme(legend.position = "none")
+}
+
+heatmap_df <- function(ordered_apps, pairwise_app_differences, source_witness, target_witness) {
+  target_contents <- ordered_apps %>% 
+    filter(witness == target_witness)
+  
+  selected_differences <- pairwise_app_differences %>% 
+    filter(source == source_witness, target == target_witness)
+  
+  expanded_content_measures <- composite_changes(target_contents, selected_differences) %>% 
+    group_by(app) %>% 
+    by_slice(function(x) {
+      nreps <- wordcount(x$text)
+      tibble(
+        app_index = seq_len(nreps),
+        composite = x$composite,
+        magnitude = x$magnitude)
+    }, .collate = "rows") %>% 
+    arrange(app) %>% 
+    mutate(index = row_number()) %>% 
+    mutate(source = source_witness, target = target_witness)
+}
+
+heatmap_plot <- function(heatmap_df) {
+  ggplot(expanded_content_measures, aes(x = 1, y = index, fill = composite, alpha = magnitude)) + 
+    geom_raster() +
+    scale_fill_gradient2(low = "red", mid = "yellow", high = "green", na.value = "gray30") +
+    scale_alpha_continuous(range = c(0.5, 1)) +
+    theme_minimal()
+  
+  
+  ggplot(compiled_df, aes(x = source, y = index, fill = composite, alpha = magnitude)) + 
+    facet_wrap(~ target, ncol = 1, scales = "free_y") + 
+    geom_raster() +
+    scale_fill_gradient2(low = "red", mid = "yellow", high = "green", na.value = "gray30") +
+    scale_alpha_continuous(range = c(0.1, 1)) +
+    theme_minimal()
+  
 }

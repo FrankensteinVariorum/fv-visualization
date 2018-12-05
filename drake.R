@@ -40,6 +40,15 @@ witness_plots_generic <- drake_plan(diffplot = synoptic_app_page_build(ordered_a
                                                                        reference_witness = "wit__"))
 witness_plots_plan <- evaluate_plan(witness_plots_generic, wildcard = "wit__", values = witnesses)
 
+heatmap_df_generic <- drake_plan(heatmap = heatmap_df(ordered_apps, pairwise_app_differences,
+                                                      source_witness = "sw__", target_witness = "tw__"))
+heatmap_df_plan <- evaluate_plan(heatmap_df_generic, rules = list(sw__ = witnesses, tw__ = witnesses), trace = TRUE)
+gathered_heat_df <- gather_plan(heatmap_df_plan, target = "compiled_df", gather = "rbind")
+
 fv_plan <- bind_plans(
   fv_plan, 
-  witness_plots_plan)
+  witness_plots_plan,
+  heatmap_df_plan,
+  gathered_heat_df)
+
+
