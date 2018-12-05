@@ -43,6 +43,3 @@ witness_plots_plan <- evaluate_plan(witness_plots_generic, wildcard = "wit__", v
 fv_plan <- bind_plans(
   fv_plan, 
   witness_plots_plan)
-
-make(fv_plan)
-
