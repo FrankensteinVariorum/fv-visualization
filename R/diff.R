@@ -150,7 +150,7 @@ heatmap_df <- function(ordered_apps, pairwise_app_differences, source_witness, t
   expanded_content_measures <- composite_changes(target_contents, selected_differences) %>% 
     group_by(app) %>% 
     by_slice(function(x) {
-      nreps <- wordcount(x$text)
+      nreps <- nchar(x$text)
       tibble(
         app_index = seq_len(nreps),
         composite = x$composite,
