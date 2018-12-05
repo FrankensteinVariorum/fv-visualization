@@ -36,7 +36,8 @@ fv_plan <- drake_plan(
                                .id = "edit_type")
 )
 
-witness_plots_generic <- drake_plan(diffplot = synoptic_app_page_build(ordered_apps, pairwise_app_differences, reference_witness = "wit__"))
+witness_plots_generic <- drake_plan(diffplot = synoptic_app_page_build(ordered_apps, pairwise_app_differences, 
+                                                                       reference_witness = "wit__"))
 witness_plots_plan <- evaluate_plan(witness_plots_generic, wildcard = "wit__", values = witnesses)
 
 fv_plan <- bind_plans(

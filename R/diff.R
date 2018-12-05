@@ -126,7 +126,7 @@ single_diff_plot <- function(target_app_contents, target_distances, ...) {
   
   unbound_apps <- unnest_tokens(bound_apps, output = word, input = text)
   
-  page_layout <- ggpage_build(bound_apps) %>% 
+  page_layout <- ggpage_build(bound_apps, ...) %>% 
     bind_cols(unbound_apps)
   
   ggpage_plot(page_layout, aes(fill = composite, alpha = magnitude), paper.limits = 0.1) + 
