@@ -69,20 +69,14 @@ heatmap_df <- function(ordered_apps, pairwise_app_differences, source_witness, t
     mutate(source = source_witness, target = target_witness)
 }
 
+# non-ggpage heatmap
+
 heatmap_plot <- function(heatmap_df) {
-  ggplot(expanded_content_measures, aes(x = 1, y = index, fill = composite, alpha = magnitude)) + 
-    geom_raster() +
-    scale_fill_gradient2(low = "red", mid = "yellow", high = "green", na.value = "gray30") +
-    scale_alpha_continuous(range = c(0.5, 1)) +
-    theme_minimal()
-  
-  
   ggplot(compiled_df, aes(x = source, y = index, fill = composite, alpha = magnitude)) + 
     facet_wrap(~ target, ncol = 1, scales = "free_y") + 
     geom_raster() +
     scale_fill_gradient2(low = "green", mid = "yellow", high = "red", na.value = "gray30") +
     scale_alpha_continuous(range = c(0.1, 1)) +
     theme_minimal()
-  
 }
 

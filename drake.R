@@ -51,7 +51,8 @@ page_plotters_generic <- drake_plan(ggsave(plot = plot_grid(plotlist = pl__, ali
 page_plotters <- evaluate_plan(page_plotters_generic, wildcard = "pl__", values = witness_plots_plan$target)
 
 other_plots <- drake_plan(
-  synoptic_heatplot = app_page_build(max_edit_distances) %>% app_page_plot() %>% ggsave(filename = file_out("output/ggpage_heatmap/ggpage_max_edit_distance.png"), height = 7, width = 9)
+  app_page_build(max_edit_distances) %>% app_page_plot() %>% ggsave(filename = file_out("output/ggpage_heatmap/ggpage_max_edit_distance.png"), height = 7, width = 9),
+  heatmap_plot(compiled_df) %>% ggsave(filename = file_out("output/tiled_heatmap/heatmap_grid.png"), height = 10, width = 10)
 )
 
 fv_plan <- bind_plans(
