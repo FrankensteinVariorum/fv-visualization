@@ -80,3 +80,21 @@ heatmap_plot <- function(heatmap_df) {
     theme_minimal()
 }
 
+# tiling ----
+
+tile_generator <- function(df, col_nchar, col_group, col_order = NULL, .width = 500, ...) {
+  res <- df %>% 
+    by_row(group_expander, col_nchar = col_nchar, .labels = FALSE) %>% 
+    pull(.out) %>% 
+    bind_rows() %>% 
+    mutate(
+      .grid_index = row_number(),
+      x = .grid_index %% .width,
+      y = .grid_index %/% + 1) %>% 
+    select(-text)
+}
+
+group_expander <- function(x, col_nchar) {
+  times <- x[[col_nchar]]
+  x[rep(seq_len(nrow(x)), times = times), ]
+}
