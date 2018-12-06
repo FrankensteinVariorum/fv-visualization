@@ -38,7 +38,7 @@ fv_plan <- drake_plan(
 )
 
 witness_plots_generic <- drake_plan(diffplot = synoptic_app_page_build(ordered_apps, pairwise_app_differences, 
-                                                                       reference_witness = "wit__"))
+                                                                       reference_witness = "wit__", nrow = 4))
 witness_plots_plan <- evaluate_plan(witness_plots_generic, wildcard = "wit__", values = witnesses)
 
 heatmap_df_generic <- drake_plan(heatmap = heatmap_df(ordered_apps, pairwise_app_differences,
