@@ -14,6 +14,7 @@ library(stringdist)
 library(tidytext)
 library(ggpage)
 library(scales)
+library(cowplot)
 
 # Load all functions
 dir_walk("R", source)
@@ -45,10 +46,16 @@ heatmap_df_generic <- drake_plan(heatmap = heatmap_df(ordered_apps, pairwise_app
 heatmap_df_plan <- evaluate_plan(heatmap_df_generic, rules = list(sw__ = witnesses, tw__ = witnesses), trace = TRUE)
 gathered_heat_df <- gather_plan(heatmap_df_plan, target = "compiled_df", gather = "rbind")
 
+page_plotters_generic <- drake_plan(ggsave(plot = plot_grid(plotlist = pl__, align = "h"), filename = file_out("output/ggpage_comparisons/pl__.png"), height = 7, width = 9))
+page_plotters <- evaluate_plan(page_plotters_generic, wildcard = "pl__", values = witness_plots_plan$target)
+
+plot_plan <- drake_plan(
+  page_plotters
+)
+
 fv_plan <- bind_plans(
   fv_plan, 
   witness_plots_plan,
   heatmap_df_plan,
-  gathered_heat_df)
-
-
+  gathered_heat_df,
+  page_plotters)
