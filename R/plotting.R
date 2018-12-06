@@ -2,9 +2,9 @@
 
 app_page_build <- function(app_attributes, ...) {
   un_apps <- app_attributes %>% 
-    unnest_tokens(output = word, input = text)
+    unnest_tokens(output = text, input = text)
   
-  ggpage_build(un_apps$word, ...) %>% 
+  ggpage_build(app_attributes, ...) %>% 
     bind_cols(un_apps) 
 }
 

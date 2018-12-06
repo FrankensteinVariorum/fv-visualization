@@ -30,6 +30,7 @@ witnesses <- map(collationfiles, function(x) {
 fv_plan <- drake_plan(
   full_df = map_df(collationfiles, read_P1),
   ordered_apps = order_apps(full_df),
+  max_edit_distances = maximum_app_distance(ordered_apps),
   pairwise_additions = pairwise_app_comparison(ordered_apps, additions),
   pairwise_deletions = pairwise_app_comparison(ordered_apps, deletions),
   pairwise_app_differences = bind_rows("char_additions" = pairwise_additions,
@@ -49,8 +50,8 @@ gathered_heat_df <- gather_plan(heatmap_df_plan, target = "compiled_df", gather 
 page_plotters_generic <- drake_plan(ggsave(plot = plot_grid(plotlist = pl__, align = "h"), filename = file_out("output/ggpage_comparisons/pl__.png"), height = 7, width = 9))
 page_plotters <- evaluate_plan(page_plotters_generic, wildcard = "pl__", values = witness_plots_plan$target)
 
-plot_plan <- drake_plan(
-  page_plotters
+other_plots <- drake_plan(
+  synoptic_heatplot = app_page_build(max_edit_distances) %>% app_page_plot() %>% ggsave(filename = file_out("output/ggpage_heatmap/ggpage_max_edit_distance.png"), height = 7, width = 9)
 )
 
 fv_plan <- bind_plans(
@@ -58,4 +59,5 @@ fv_plan <- bind_plans(
   witness_plots_plan,
   heatmap_df_plan,
   gathered_heat_df,
-  page_plotters)
+  page_plotters,
+  other_plots)

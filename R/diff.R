@@ -14,18 +14,19 @@ order_apps <- function(full_df) {
 
 # Max edit calculations ----
 
-app_features <- function(reshaped_spine) {
-  reshaped_spine %>% 
-    group_by(app_ids) %>% 
+maximum_app_distance <- function(ordered_apps) {
+  ordered_apps %>% 
+    group_by(app, chunk, subchunk, index) %>% 
     mutate(
-      content_char = nchar(content),
-      witness_difference = coalesce(stringdist(content, lag(content)))) %>% 
+      content_char = nchar(text),
+      witness_difference = coalesce(stringdist(text, lag(text)))) %>% 
     summarize(
-      text = last(content),
+      text = last(text),
       app_length = max(content_char),
       max_app_edit_distance = max(witness_difference, na.rm = TRUE),
       log_max_app_edit_distance = log10(if_else(max_app_edit_distance == 0, NA_real_, max_app_edit_distance))
-    )
+    ) %>% 
+    ungroup()
 }
 
 # Addition/Deletion calculations ----
