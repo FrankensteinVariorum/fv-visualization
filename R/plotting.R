@@ -72,19 +72,24 @@ heatmap_df <- function(ordered_apps, pairwise_app_differences, source_witness, t
         magnitude = x$magnitude)
     }, .collate = "rows") %>% 
     arrange(app) %>% 
-    mutate(index = row_number()) %>% 
+    mutate(text_position = row_number()/nrow(.)) %>% 
     mutate(source = source_witness, target = target_witness)
 }
 
 # non-ggpage heatmap
 
 heatmap_plot <- function(heatmap_df) {
-  ggplot(compiled_df, aes(x = source, y = index, fill = composite, alpha = magnitude)) + 
-    facet_wrap(~ target, ncol = 1, scales = "free_y") + 
+  ggplot(compiled_df, aes(x = "default", y = text_position, fill = composite, alpha = magnitude)) + 
+    facet_grid(cols = vars("Reference" = source), rows = vars("Comparison" = target), scales = "free_y", labeller = label_both) + 
     geom_raster() +
     scale_edit_composites() +
     scale_alpha_continuous(range = c(0.1, 1)) +
-    theme_minimal()
+    scale_y_reverse() +
+    theme_minimal() +
+    theme(axis.title.x = element_blank(),
+          axis.text.x = element_blank(),
+          axis.ticks.x = element_blank()) +
+    labs(y = "Book position")
 }
 
 # tiling ----
