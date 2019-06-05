@@ -21,7 +21,7 @@ dir_walk("R", source)
 
 # P1 collations ----
 
-collation_dir <- "../fv-postCollation/P1-output/"
+collation_dir <- "../../fv-postCollation/P1-output/"
 collationfiles <- dir_ls(collation_dir, glob = "*.xml")
 witnesses <- map(collationfiles, function(x) {
   read_xml(x) %>% xml_find_all(".//d1:rdg") %>% xml_attr("wit")
