@@ -37,8 +37,9 @@ fv_plan <- drake_plan(
   pairwise_app_differences = bind_rows("char_additions" = pairwise_additions,
                                "char_deletions" = pairwise_deletions,
                                .id = "edit_type"),
-  synoptic_df = full_df %>% mutate(nchar = nchar(text)) %>% select(-text) %>% spread(witness, nchar, fill = 0L) %>% toJSON(pretty = TRUE),
-  d3_json = write_lines(synoptic_df, path = file_out("../d3/data.json"))
+  synoptic_df = full_df %>% mutate(nchar = nchar(text)) %>% select(-text) %>% spread(witness, nchar, fill = 0L),
+  spread_text = full_df %>% spread(witness, text)
+  #  = write_lines(toJSON(synoptic_df, pretty = TRUE), path = file_out("../d3/data.json"))
 )
 
 witness_plots_generic <- drake_plan(diffplot = synoptic_app_page_build(ordered_apps, pairwise_app_differences, 
@@ -55,7 +56,9 @@ page_plotters <- evaluate_plan(page_plotters_generic, wildcard = "pl__", values 
 
 other_plots <- drake_plan(
   app_page_build(max_edit_distances) %>% app_page_plot() %>% ggsave(filename = file_out("output/ggpage_heatmap/ggpage_max_edit_distance.png"), height = 7, width = 9),
-  heatmap_plot(compiled_df) %>% ggsave(filename = file_out("output/tiled_heatmap/heatmap_grid.png"), height = 10, width = 10)
+  heatmap_plot(compiled_df) %>% ggsave(filename = file_out("output/tiled_heatmap/heatmap_grid.png"), height = 10, width = 10),
+  diff_df = compiled_df %>% unite("pairing", source, target) %>% distinct(app, pairing, composite) %>% spread(pairing, composite, fill = 0) %>% left_join(synoptic_df, by = "app") %>% left_join(spread_text, by = "app", suffix = c("_nchar", "_text")),
+  d3_json = write_lines(toJSON(diff_df, pretty = TRUE), path = file_out("../d3/data.json"))
 )
 
 fv_plan <- bind_plans(

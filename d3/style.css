@@ -1,8 +1,12 @@
+#wrapper {
+  width: 500px;
+}
+
 .app {
-  margin: 1px;
-  height: 5px;
-  width: 5px;
-  fill: lightgray;
+  margin-bottom: 1px;
+  height: 30px;
+  width: 0px;
+  background-color: gray;
 }
 
 .active {
