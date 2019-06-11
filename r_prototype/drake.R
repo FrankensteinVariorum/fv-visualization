@@ -37,7 +37,7 @@ fv_plan <- drake_plan(
   pairwise_app_differences = bind_rows("char_additions" = pairwise_additions,
                                "char_deletions" = pairwise_deletions,
                                .id = "edit_type"),
-  synoptic_df = full_df %>% mutate(nchar = nchar(text)) %>% toJSON(pretty = TRUE),
+  synoptic_df = full_df %>% mutate(nchar = nchar(text)) %>% select(-text) %>% spread(witness, nchar, fill = 0L) %>% toJSON(pretty = TRUE),
   d3_json = write_lines(synoptic_df, path = file_out("../d3/data.json"))
 )
 

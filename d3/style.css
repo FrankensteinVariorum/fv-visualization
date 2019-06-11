@@ -1,0 +1,10 @@
+.app {
+  margin: 1px;
+  height: 5px;
+  width: 5px;
+  fill: lightgray;
+}
+
+.active {
+  fill: purple;
+}
