@@ -4,6 +4,7 @@ pkgconfig::set_config(
   "drake::strings_in_dots" = "literals",
   "drake::verbose" = 4)
 
+library(jsonlite)
 library(drake)
 library(tidyverse)
 library(purrrlyr)
@@ -35,7 +36,9 @@ fv_plan <- drake_plan(
   pairwise_deletions = pairwise_app_comparison(ordered_apps, deletions),
   pairwise_app_differences = bind_rows("char_additions" = pairwise_additions,
                                "char_deletions" = pairwise_deletions,
-                               .id = "edit_type")
+                               .id = "edit_type"),
+  synoptic_df = full_df %>% mutate(nchar = nchar(text)) %>% toJSON(pretty = TRUE),
+  d3_json = write_lines(synoptic_df, path = file_out("../d3/data.json"))
 )
 
 witness_plots_generic <- drake_plan(diffplot = synoptic_app_page_build(ordered_apps, pairwise_app_differences, 
