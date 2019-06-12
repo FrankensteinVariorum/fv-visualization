@@ -13,6 +13,7 @@
     <script src="https://d3js.org/d3-time-format.v2.min.js"></script>
     <script src="https://d3js.org/d3-scale.v3.min.js"></script>
     <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-legend/1.13.0/d3-legend.js"></script>
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
       integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
@@ -26,18 +27,21 @@
       <h2 id="witness"></h2>
       <div class="d-flex justify-content-between align-items-start">
         <div class="btn-group-vertical" id="source-witness">
-          <p>Source</p>
+          <p>Starting from this witness...</p>
           <button class="btn btn-primary witness-btn active" id="fMS">Manuscript</button>
           <button class="btn btn-primary witness-btn" id="f1818">1818</button>
           <button class="btn btn-primary witness-btn" id="f1823">1823</button>
           <button class="btn btn-primary witness-btn" id="f1831">1831</button>
           <button class="btn btn-primary witness-btn" id="fThomas">Thomas</button>
         </div>
-        <div class="d-flex flex-wrap mx-3" id="wrapper">
-
+        <div id="graph">
+          <svg id="legend"></svg>
+          <div class="d-flex flex-wrap mx-3" id="wrapper">
+          </div>
         </div>
+
         <div class="btn-group-vertical" id="target-witness">
-          <p>Target</p>
+          <p>...show changes to get to this witness</p>
           <button class="btn btn-primary witness-btn" id="fMS">Manuscript</button>
           <button class="btn btn-primary witness-btn active" id="f1818">1818</button>
           <button class="btn btn-primary witness-btn" id="f1823">1823</button>

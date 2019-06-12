@@ -1,14 +1,29 @@
 #wrapper {
-  width: 500px;
+  /* width: 500px; */
 }
 
-.app {
+div.app {
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
   margin-bottom: 1px;
   height: 30px;
   width: 0px;
   background-color: gray;
 }
 
-.active {
-  fill: purple;
+div.hovered {
+  border: 1px solid red;
+}
+
+div.tt {
+  position: absolute;
+  text-align: left;
+  width: 400px;
+  height: auto;
+  padding: 2px;
+  font: 15px serif;
+  border: 1px solid black;
+  background-color: lightgray;
+  pointer-events: none;
 }
