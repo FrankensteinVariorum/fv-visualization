@@ -1,27 +1,53 @@
 <!DOCTYPE html>
 <html>
 
-    <head>
-        <title>Synoptic Frankenstein</title>
-        <meta charset="utf-8" />
-        <script type="text/javascript" src="http://d3js.org/d3.v3.js"></script>
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-            integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-        <link rel="stylesheet" href="style.css" />
+  <head>
+    <title>Synoptic Frankenstein</title>
+    <meta charset="utf-8" />
+    <script type="text/javascript" src="http://d3js.org/d3.v3.js"></script>
+    <script src="https://d3js.org/d3-array.v2.min.js"></script>
+    <script src="https://d3js.org/d3-color.v1.min.js"></script>
+    <script src="https://d3js.org/d3-format.v1.min.js"></script>
+    <script src="https://d3js.org/d3-interpolate.v1.min.js"></script>
+    <script src="https://d3js.org/d3-time.v1.min.js"></script>
+    <script src="https://d3js.org/d3-time-format.v2.min.js"></script>
+    <script src="https://d3js.org/d3-scale.v3.min.js"></script>
+    <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
 
-    </head>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="style.css" />
 
-    <body>
+  </head>
 
-        <div class="container">
-            <h2 id="witness"></h2>
-            <div class="d-flex flex-wrap" id="wrapper">
+  <body>
 
-            </div>
-            <svg style="width:1500px; height:1500px;"></svg>
+    <div class="container">
+      <h2 id="witness"></h2>
+      <div class="d-flex justify-content-between">
+        <div class="btn-group-vertical" id="source-witness">
+          <p>Source</p>
+          <button class="btn btn-primary witness-btn" id="fMS">Manuscript</button>
+          <button class="btn btn-primary witness-btn" id="f1818" disabled>1818</button>
+          <button class="btn btn-primary witness-btn" id="f1823">1823</button>
+          <button class="btn btn-primary witness-btn" id="f1831">1831</button>
+          <button class="btn btn-primary witness-btn" id="fThomas">Thomas</button>
         </div>
+        <div class="d-flex flex-wrap mx-3" id="wrapper">
 
-    </body>
-    <script type="text/javascript" src="app.js"></script>
+        </div>
+        <div class="btn-group-vertical" id="target-witness">
+          <p>Target</p>
+          <button class="btn btn-primary witness-btn" id="fMS">Manuscript</button>
+          <button class="btn btn-primary witness-btn" id="f1818">1818</button>
+          <button class="btn btn-primary witness-btn" id="f1823">1823</button>
+          <button class="btn btn-primary witness-btn" id="f1831">1831</button>
+          <button class="btn btn-primary witness-btn" id="fThomas">Thomas</button>
+        </div>
+      </div>
+    </div>
+
+  </body>
+  <script type="text/javascript" src="app.js"></script>
 
 </html>
