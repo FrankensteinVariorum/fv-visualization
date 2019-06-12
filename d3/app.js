@@ -46,12 +46,6 @@
       return
     };
 
-    function update_heading(from, to) {
-      d3.select("h2#witness")
-        .html(from + " -> " + to)
-      return
-    }
-
     function source_input_click() {
       set_source_witness(this.getAttribute("id"))
       d3.selectAll("#source-witness button")
@@ -69,7 +63,6 @@
     }
 
     function input_change(from, to) {
-      update_heading(from, to)
       witness_shift(from, to)
       return
     }
@@ -95,11 +88,6 @@
     d3.selectAll("#target-witness button")
       .on("click", target_input_click);
 
-    var legend_color = d3.legend.color()
-      .shapeWidth(30)
-      .orient('horizontal')
-      .scale(col_scale);
-
     d3.select("#wrapper")
       .selectAll("div.app")
       .data(data)
@@ -115,15 +103,6 @@
       .on("mouseout", app_nohover)
 
     input_change(get_source_witness(), get_target_witness())
-
-    d3.select("svg#legend")
-      .append("g")
-      .attr("class", "legend")
-      .attr("transform", "translate(20,20)")
-
-    d3.select("svg#legend")
-      .select(".legend")
-      .call(legend_color);
   };
 
   d3.json("data.json", function (error, data) {
