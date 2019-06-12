@@ -1,12 +1,27 @@
 (function () {
 
+  source_witness = "fMS"
+  target_witness = "f1818"
+
   function get_source_witness() {
-    return d3.select("#source-witness button[disabled]").attr("id")
+    return source_witness
   };
 
   function set_source_witness(id) {
-    return d3.select("#source-witness button[id='" + id + "']")
+    source_witness = id
+    return true
   };
+
+  function get_target_witness() {
+    return target_witness
+  };
+
+  function set_target_witness(id) {
+    target_witness = id
+    return true
+  };
+
+
 
   function draw_apps(data) {
     var maxNchar = d3.max(data, d => d3.max([d.fMS_nchar, d.f1818_nchar, d.f1823_nchar, d.f1831_nchar, d.fThomas_nchar]))
@@ -18,7 +33,6 @@
     var col_scale = d3.scaleDiverging(d3.interpolatePuOr).domain([minchange, 0, maxchange])
 
     function witness_shift(from, to) {
-      // set_source_witness(to)
       console.log(from + ">" + to)
       d3.select("#wrapper")
         .selectAll("div.app")
@@ -38,20 +52,33 @@
       return
     }
 
-    function input_click() {
-      var new_witness = this.getAttribute("id")
-      console.log(new_witness)
-      // disable button
-      // d3.selectAll("#button-container button")
-      //   .button("enable")
-      // this.button("disable")
-      update_heading(get_source_witness(), new_witness)
-      witness_shift(get_source_witness(), new_witness)
+    function source_input_click() {
+      set_source_witness(this.getAttribute("id"))
+      d3.selectAll("#source-witness button")
+        .classed("active", false)
+      this.classList.add("active")
+      input_change(get_source_witness(), get_target_witness())
+    }
+
+    function target_input_click() {
+      set_target_witness(this.getAttribute("id"))
+      d3.selectAll("#target-witness button")
+        .classed("active", false)
+      this.classList.add("active")
+      input_change(get_source_witness(), get_target_witness())
+    }
+
+    function input_change(from, to) {
+      update_heading(from, to)
+      witness_shift(from, to)
       return
     }
 
-    d3.selectAll("button")
-      .on("click", input_click);
+    d3.selectAll("#source-witness button")
+      .on("click", source_input_click);
+
+    d3.selectAll("#target-witness button")
+      .on("click", target_input_click);
 
     d3.select("#wrapper")
       .selectAll("div.app")
@@ -62,9 +89,7 @@
       .attr("app", d => d.app)
       .style("width", d => width_scale(d[get_source_witness() + "_nchar"]) + "px")
 
-    update_heading(get_source_witness())
-
-    witness_shift("fMS", "f1818")
+    update_heading(get_source_witness(), get_target_witness())
   };
 
 
