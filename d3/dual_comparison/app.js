@@ -39,9 +39,6 @@
         .transition()
         .duration(1000)
         .style("background-color", d => col_scale(d[(from + "_" + to)]))
-        .transition()
-        .duration(2000)
-        .delay(2000)
         .style("width", d => width_scale(d[from + "_nchar"]) + "px")
 
       d3.select("#target-wrapper")
@@ -49,9 +46,6 @@
         .transition()
         .duration(1000)
         .style("background-color", d => col_scale(d[(to + "_" + from)]))
-        .transition()
-        .duration(2000)
-        .delay(2000)
         .style("width", d => width_scale(d[to + "_nchar"]) + "px")
       return
     };
