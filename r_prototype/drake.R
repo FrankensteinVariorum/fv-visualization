@@ -68,3 +68,22 @@ fv_plan <- bind_plans(
   gathered_heat_df,
   page_plotters,
   other_plots)
+
+chunks_path = "../../fv-data/variorum-chunks"
+fms_path = "../../fv-data/reseqMS-chunks"
+chunk_files = c(dir_ls(chunks_path, glob = "*.xml"), dir_ls(fms_path, glob = "*.xml"))
+
+coll_plan <- drake_plan(
+  chunk_df = map_df(chunk_files, process_chunk_file) %>% 
+    mutate(
+      seg_id = factor(seg_id, levels = unique(seg_id), ordered = TRUE),
+      witness = factor(witness, levels = c("fMS", "f1818", "f1823", "f1831", "fThomas"))) %>% 
+    complete(seg_id, witness, fill = list(text = "")) %>% 
+    arrange(seg_id),
+  diff_list = chunk_df %>% 
+    group_by(seg_id) %>% 
+    by_slice(df_pairwise_edits, .collate = "list", .labels = TRUE),
+  json_diff = toJSON(diff_list, pretty = TRUE),
+  json_diff_out = write_lines(json_diff, path = file_out("../d3/data.json"))
+)
+

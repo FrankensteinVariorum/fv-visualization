@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>Synoptic Frankenstein</title>
+    <meta charset="utf-8" />
+    <script type="text/javascript" src="http://d3js.org/d3.v3.js"></script>
+    <script src="https://d3js.org/d3-array.v2.min.js"></script>
+    <script src="https://d3js.org/d3-color.v1.min.js"></script>
+    <script src="https://d3js.org/d3-format.v1.min.js"></script>
+    <script src="https://d3js.org/d3-interpolate.v1.min.js"></script>
+    <script src="https://d3js.org/d3-time.v1.min.js"></script>
+    <script src="https://d3js.org/d3-time-format.v2.min.js"></script>
+    <script src="https://d3js.org/d3-scale.v3.min.js"></script>
+    <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="style.css" />
+
+  </head>
+
+  <body>
+
+    <div class="container">
+      <h1>d3 Prototype 2: Two maps; two controls</h1>
+      <div class="card">
+        <div class="card-header">
+          Prototype viewer that compares two witnesses. The left controls which witness is the "source" of
+          comparison, and the right controls which witness is the "target" of comparison. The size of each collation
+          unit
+          is based on number of characters in each selected witness, and the color based on the relative change from one
+          witness to get to the other -
+          <strong style="color:rgb(45, 0, 75);">more characters added</strong> vs <strong
+            style="color:rgb(127, 59, 8);;">more
+            removed</strong>.
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-2">
+              <div class="d-flex flex-wrap mx-3 wrapper" id="fMS"></div>
+            </div>
+            <div class="col-2">
+              <div class="d-flex flex-wrap mx-3 wrapper" id="f1818"></div>
+            </div>
+            <div class="col-2">
+              <div class="d-flex flex-wrap mx-3 wrapper" id="f1823"></div>
+            </div>
+            <div class="col-2">
+              <div class="d-flex flex-wrap mx-3 wrapper" id="f1831"></div>
+            </div>
+            <div class="col-2">
+              <div class="d-flex flex-wrap mx-3 wrapper" id="fThomas"></div>
+            </div>
+            </div>
+          </div>  
+          </div>
+        </div>
+        <div class="card-footer"><small>Matthew Lincoln for dSHARP @ CMU</small></div>
+      </div>
+    </div>
+
+  </body>
+  <script type="text/javascript" src="app.js"></script>
+
+</html>
