@@ -52,6 +52,16 @@
       }
     }
 
+    function diff_button_click() {
+      set_diff_type(this.getAttribute("id"))
+      d3.selectAll("button.diff-button")
+        .classed("active", false)
+      this.classList.add("active")
+      for (i = 0; i < witnesses.length; i++) {
+        witness_shift(witnesses[i], get_source_witness(), get_diff_type())
+      }
+    }
+
     // function input_change(from, to) {
     //   witness_shift(from, to)
     //   return
@@ -80,6 +90,9 @@
 
     d3.selectAll("button.witness-button")
       .on("click", witness_button_click);
+
+    d3.selectAll("button.diff-button")
+      .on("click", diff_button_click);
 
     // d3.selectAll("#target-witness button")
     //   .on("click", target_input_click);
