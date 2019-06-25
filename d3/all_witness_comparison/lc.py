@@ -23,8 +23,12 @@ for obj in coll_list:
   for diff in obj[".out"]["additions"]:
     diff_data = {}
     for target in diff["data"]:
-      diff_data[target["target"]] = target["value"]
-      change_indicies.append(target["value"])
+      if target["value"] == 0:
+        val = None
+      else:
+        val = target["value"]
+      diff_data[target["target"]] = val
+      change_indicies.append(val)
     witness[diff["source"]]["additions"] = diff_data
 
   for diff in obj[".out"]["deletions"]:
