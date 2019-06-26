@@ -32,7 +32,7 @@
     var minchange = data.range.min
     var maxchange = data.range.max
 
-    var col_scale = d3.scale.linear().domain([minchange, maxchange]).range(["white", "red"])
+    var col_scale = d3.scale.linear().domain([minchange, maxchange]).range(["blue", "red"])
 
     function witness_shift(base_witness, reference_witness, difftype) {
       d3.select(".wrapper#" + base_witness)
@@ -62,20 +62,25 @@
       }
     }
 
-    function app_hover(d) {
-      var divs = d3.select(this)
-        .classed("hovered", true)
-        .append("div")
-        .classed("tt", true)
+    function truncate_string(s, max) {
+      if (s.length > max) {
+        return s.substring(0, max) + "..."
+      } else {
+        return s
+      }
+    }
 
-      divs.html(t => t[d3.select(this.parentNode).attr("id")].text.content)
+    function app_hover(d) {
+      d3.selectAll("div.app#" + d.seg)
+        .classed("hovered", true)
+      for (i = 0; i < witnesses.length; i++) {
+        d3.select("p.text-display#" + witnesses[i]).text(truncate_string(d[witnesses[i]].text.content, 100))
+      }
     }
 
     function app_nohover(d) {
-      d3.select(this)
+      d3.selectAll("div.app#" + d.seg)
         .classed("hovered", false)
-        .select("div.tt")
-        .remove()
     };
 
     d3.selectAll("button.witness-button")
@@ -91,7 +96,7 @@
         .enter()
         .append("div")
         .classed("app", true)
-        .attr("app", d => d.app)
+        .attr("id", d => d.seg)
         .style("width", d => width_scale(d[witnesses[i]].text.nchar) + "px");
 
       witness_shift(witnesses[i], get_source_witness(), get_diff_type());
