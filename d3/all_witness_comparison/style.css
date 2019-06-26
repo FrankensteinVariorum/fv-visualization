@@ -27,3 +27,7 @@ div.tt {
   background-color: lightgray;
   pointer-events: none;
 }
+
+button.witness-button {
+  margin-bottom: 1rem;
+}

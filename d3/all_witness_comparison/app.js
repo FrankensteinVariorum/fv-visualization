@@ -27,12 +27,12 @@
 
   function draw_apps(data) {
     var maxNchar = data.nchars.max
-    var width_scale = d3.scale.linear().domain([0, maxNchar]).range([0, 100])
+    var width_scale = d3.scale.linear().domain([0, maxNchar]).range([0, 200])
 
     var minchange = data.range.min
     var maxchange = data.range.max
 
-    var col_scale = d3.scale.linear().domain([minchange, maxchange]).range(["blue", "red"])
+    var col_scale = d3.scale.log().domain([minchange, maxchange]).range(d3.schemePuOr)
 
     function witness_shift(base_witness, reference_witness, difftype) {
       d3.select(".wrapper#" + base_witness)
