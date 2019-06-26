@@ -62,24 +62,14 @@
       }
     }
 
-    // function input_change(from, to) {
-    //   witness_shift(from, to)
-    //   return
-    // }
+    function app_hover(d) {
+      var divs = d3.select(this)
+        .classed("hovered", true)
+        .append("div")
+        .classed("tt", true)
 
-    // function app_hover(d) {
-    //   var divs = d3.select(this)
-    //     .classed("hovered", true)
-    //     .append("div")
-    //     .classed("tt", true)
-
-    //   if (d3.select(this.parentNode).attr("id") == "target-wrapper") {
-    //     divs.html(t => t[get_target_witness() + "_text"])
-    //   }
-    //   else {
-    //     divs.html(t => t[get_source_witness() + "_text"])
-    //   }
-    // }
+      divs.html(t => t[d3.select(this.parentNode).attr("id")].text.content)
+    }
 
     function app_nohover(d) {
       d3.select(this)
@@ -94,10 +84,6 @@
     d3.selectAll("button.diff-button")
       .on("click", diff_button_click);
 
-    // d3.selectAll("#target-witness button")
-    //   .on("click", target_input_click);
-
-
     for (i = 0; i < witnesses.length; i++) {
       d3.select(".wrapper#" + witnesses[i])
         .selectAll("div.app")
@@ -111,12 +97,10 @@
       witness_shift(witnesses[i], get_source_witness(), get_diff_type());
     }
 
-
-    // d3.selectAll("div.app")
-    //   .on("mouseover", app_hover)
-    //   .on("mouseout", app_nohover)
+    d3.selectAll("div.app")
+      .on("mouseover", app_hover)
+      .on("mouseout", app_nohover)
   }
-
 
   d3.json("data.json", function (error, data) {
     if (error) {
