@@ -47,7 +47,10 @@
       d3.select(".wrapper#" + base_witness)
         .selectAll("div.app")
         .transition()
-        .duration(1000)
+        .duration(500)
+        .style("background-color", "lightgray")
+        .transition()
+        .duration(500)
         .style("background-color", d => diff_scale(difftype)(d[base_witness].diffs[reference_witness].stats[difftype]))
     }
 
@@ -86,7 +89,7 @@
       d3.selectAll("div.app#" + d.seg)
         .classed("hovered", true)
       for (i = 0; i < witnesses.length; i++) {
-        d3.select("p.text-display#" + witnesses[i]).text(truncate_string(d[witnesses[i]].text.content, 100))
+        d3.select("p.text-display#" + witnesses[i]).text(d.seg + ": " + truncate_string(d[witnesses[i]].text.content, 20000))
       }
     }
 
