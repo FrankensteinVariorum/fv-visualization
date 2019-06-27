@@ -58,7 +58,12 @@
     }
 
     function witness_button_click() {
-      set_source_witness(this.getAttribute("id"))
+      var wit_id = this.getAttribute("id")
+      d3.selectAll("div.witness-col")
+        .classed("hovered", false)
+      d3.select("div.witness-col#" + wit_id)
+        .classed("hovered", true)
+      set_source_witness(wit_id)
       d3.selectAll("button.witness-button")
         .classed("active", false)
       this.classList.add("active")
