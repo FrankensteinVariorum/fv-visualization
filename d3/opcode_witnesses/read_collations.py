@@ -26,14 +26,14 @@ for f in collation_chunks:
     if text_ele is not None:
       chunkname = re.search("_(C\d+)", f).groups()[0]
       text_obj = {
-        "witness":re.search("f([A-Za-z0-9]+)?_", f).groups()[0],
+        "witness": "f" + re.search("f([A-Za-z0-9]+)?_", f).groups()[0],
         "chunk": chunkname,
         "seg": text_ele.split("-")[0],
         "content": str(ct),
       }
       text_strings.append(text_obj)
 text_strings.sort(key = itemgetter("seg"))
-witnesses = ["1818", "1823", "1831", "Thomas"]
+witnesses = ["f1818", "f1823", "f1831", "fThomas"]
 seg_texts = []
 for key, rawkeydicts in groupby(text_strings, key = itemgetter("seg")):
   keydicts = [dict(d) for d in rawkeydicts]

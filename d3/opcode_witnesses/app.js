@@ -1,10 +1,10 @@
 (function () {
 
   var witnesses = [
-    "fMS", "f1818", "f1823", "f1831", "fThomas"
+    "f1818", "f1823", "f1831", "fThomas"
   ]
 
-  var source_witness = "fMS"
+  var source_witness = "f1818"
   var diff_type = "additions"
 
   function get_source_witness() {
@@ -93,14 +93,14 @@
     for (i = 0; i < witnesses.length; i++) {
       d3.select(".wrapper#" + witnesses[i])
         .selectAll("div.app")
-        .data(data.data)
+        .data(data.segs)
         .enter()
         .append("div")
         .classed("app", true)
         .attr("id", d => d.seg)
         .style("width", d => width_scale(d[witnesses[i]].text.nchar) + "px");
 
-      witness_shift(witnesses[i], get_source_witness(), get_diff_type());
+      // witness_shift(witnesses[i], get_source_witness(), get_diff_type());
     }
 
     d3.selectAll("div.app")
@@ -108,7 +108,7 @@
       .on("mouseout", app_nohover)
   }
 
-  d3.json("data.json", function (error, data) {
+  d3.json("diffs.json", function (error, data) {
     if (error) {
       console.error(error)
     } else {
