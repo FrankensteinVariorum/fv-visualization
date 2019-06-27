@@ -6,8 +6,8 @@ div.app {
   box-sizing: border-box;
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
-  margin-bottom: 1px;
-  height: 10px;
+  margin-bottom: 3px;
+  height: 15px;
   width: 0px;
   background-color: lightgray;
   border: 1px solid gray;

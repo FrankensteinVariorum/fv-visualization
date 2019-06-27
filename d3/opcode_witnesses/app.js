@@ -27,7 +27,7 @@
 
   function draw_apps(data) {
     var maxNchar = data.stats.nchar.max
-    var width_scale = d3.scale.linear().domain([0, maxNchar]).range([0, 500])
+    var width_scale = d3.scale.linear().domain([0, maxNchar]).range([0, 300])
 
     var maxadd = data.stats.addition.max
     var maxdel = data.stats.deletion.max
