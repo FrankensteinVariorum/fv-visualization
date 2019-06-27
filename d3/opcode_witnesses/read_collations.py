@@ -41,12 +41,12 @@ for key, rawkeydicts in groupby(text_strings, key = itemgetter("seg")):
     try:
       source_text = [t["content"] for t in keydicts if t["witness"] == source_wit][0]
     except:
-      source_text = None
+      source_text = ""
     for target_wit in witnesses:
       try:
         target_text = [a["content"] for a in keydicts if a["witness"] == target_wit][0]
       except:
-        target_text = None
+        target_text = ""
       if source_text is not None and target_text is not None:
         seqer = SequenceMatcher(lambda x: x==" ", source_text, target_text)
         diff_ops = seqer.get_opcodes()
@@ -61,9 +61,9 @@ for key, rawkeydicts in groupby(text_strings, key = itemgetter("seg")):
       else:
         diff_ops = None
         diff_stats = {
-          "additions": None,
-          "deletions": None,
-          "magnitude": None,
+          "additions": 0,
+          "deletions": 0,
+          "magnitude": 0,
         }
       res = {
         "seg": key,
