@@ -5,7 +5,7 @@
   ]
 
   var source_witness = "f1818"
-  var diff_type = "additions"
+  var diff_type = "magnitude"
 
   function get_source_witness() {
     return source_witness
@@ -31,24 +31,27 @@
 
     var maxadd = data.stats.addition.max
     var maxdel = data.stats.deletion.max
+    var mincombo = data.stats.magnitude.min
+    var maxcombo = data.stats.magnitude.max
 
     var add_scale = d3.scale.log().domain([1, maxadd]).range(["white", "purple"])
     var del_scale = d3.scale.log().domain([1, maxdel]).range(["white", "orange"])
+    var mincombo = data.stats.magnitude.min
+    var mag_scale = d3.scaleDiverging(d3.interpolatePuOr).domain([mincombo, 0, maxcombo])
 
     function diff_scale(type) {
       if (type == "additions") {
         return add_scale
       } else if (type == "deletions") {
         return del_scale
+      } else if (type == "magnitude") {
+        return mag_scale
       }
     }
 
     function witness_shift(base_witness, reference_witness, difftype) {
       d3.select(".wrapper#" + base_witness)
         .selectAll("div.app")
-        .transition()
-        .duration(500)
-        .style("background-color", "lightgray")
         .transition()
         .duration(500)
         .style("background-color", d => diff_scale(difftype)(d[base_witness].diffs[reference_witness].stats[difftype]))

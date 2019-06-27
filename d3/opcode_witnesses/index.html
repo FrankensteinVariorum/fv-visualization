@@ -26,14 +26,12 @@
       <h1>d3 Prototype 3: All witnesses</h1>
       <div class="card">
         <div class="card-header">
-          Prototype viewer that compares two witnesses. The left controls which witness is the "source" of
-          comparison, and the right controls which witness is the "target" of comparison. The size of each collation
-          unit
-          is based on number of characters in each selected witness, and the color based on the relative change from one
-          witness to get to the other -
-          <strong style="color:rgb(45, 0, 75);">more characters added</strong> vs <strong
-            style="color:rgb(127, 59, 8);;">more
-            removed</strong>.
+          Prototype viewer comparing all witnesses. Whichever witness is selected as a source, the others will recolor
+          to represent the relative number of
+          <strong style="color:rgb(45, 0, 75);">additions</strong> vs <strong
+            style="color:rgb(127, 59, 8);;">deletions</strong> required to get from the selected witnesses' segment text
+          to the other
+          witnesses' versions of that same segment.
         </div>
         <div class="card-body">
           <div class="row">
@@ -63,11 +61,11 @@
               <p class="text-display" id="fThomas"></p>
             </div>
           </div>
-          <div class="row">
+          <!-- <div class="row">
             <button type="button" class="btn btn-secondary diff-button active" id="additions">Additions</button>
-            <!-- <button type="button" class="btn btn-secondary diff-button" id="substitutions">Substitutions</button> -->
+            <button type="button" class="btn btn-secondary diff-button" id="magnitude">Changes</button>
             <button type="button" class="btn btn-secondary diff-button" id="deletions">Deletions</button>
-          </div>
+          </div> -->
         </div>
       </div>
     </div>

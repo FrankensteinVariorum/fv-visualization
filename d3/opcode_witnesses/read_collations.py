@@ -56,12 +56,14 @@ for key, rawkeydicts in groupby(text_strings, key = itemgetter("seg")):
         diff_stats = {
           "additions": diff_additions,
           "deletions": diff_deletions,
+          "magnitude": diff_additions - diff_deletions,
         }
       else:
         diff_ops = None
         diff_stats = {
           "additions": None,
           "deletions": None,
+          "magnitude": None,
         }
       res = {
         "seg": key,
@@ -80,6 +82,7 @@ final_output = {
 }
 addition_ranges = []
 deletion_ranges = []
+magnitude_ranges = []
 nchar_ranges = []
 for seg, segdicts in groupby(seg_texts, key = itemgetter("seg")):
   res = {"seg": seg}
@@ -90,6 +93,7 @@ for seg, segdicts in groupby(seg_texts, key = itemgetter("seg")):
     for d in sourcedicts:
       addition_ranges.append(d["diff_stats"]["additions"])
       deletion_ranges.append(d["diff_stats"]["deletions"])
+      magnitude_ranges.append(d["diff_stats"]["magnitude"])
       target_diffs[d["target_witness"]] = {
         # "ops": d["diff_ops"],
         "stats": d["diff_stats"],
@@ -119,6 +123,11 @@ final_output["stats"]["addition"] = {
 final_output["stats"]["deletion"] = {
   "min": min([a for a in deletion_ranges if a is not None]),
   "max": max([a for a in deletion_ranges if a is not None]),
+}
+
+final_output["stats"]["magnitude"] = {
+  "min": min([a for a in magnitude_ranges if a is not None]),
+  "max": max([a for a in magnitude_ranges if a is not None]),
 }
 
 final_output["stats"]["nchar"] = {
