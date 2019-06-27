@@ -27,21 +27,29 @@
 
   function draw_apps(data) {
     var maxNchar = data.stats.nchar.max
-    var width_scale = d3.scale.linear().domain([0, maxNchar]).range([0, 200])
+    var width_scale = d3.scale.linear().domain([0, maxNchar]).range([0, 500])
 
     var maxadd = data.stats.addition.max
     var maxdel = data.stats.deletion.max
 
-    var add_scale = d3.scale.log().domain([1, maxadd]).range("white", "purple")
-    var delscale = d3.scale.log().domain([1, maxdel]).range("white", "orange")
+    var add_scale = d3.scale.log().domain([1, maxadd]).range(["white", "purple"])
+    var del_scale = d3.scale.log().domain([1, maxdel]).range(["white", "orange"])
+
+    function diff_scale(type) {
+      if (type == "additions") {
+        return add_scale
+      } else if (type == "deletions") {
+        return del_scale
+      }
+    }
 
     function witness_shift(base_witness, reference_witness, difftype) {
       d3.select(".wrapper#" + base_witness)
         .selectAll("div.app")
         .transition()
         .duration(1000)
-        .style("background-color", d => col_scale(d[base_witness][difftype][reference_witness]))
-    };
+        .style("background-color", d => diff_scale(difftype)(d[base_witness].diffs[reference_witness].stats[difftype]))
+    }
 
     function witness_button_click() {
       set_source_witness(this.getAttribute("id"))
@@ -64,6 +72,9 @@
     }
 
     function truncate_string(s, max) {
+      if (s == null) {
+        return ""
+      }
       if (s.length > max) {
         return s.substring(0, max) + "..."
       } else {
@@ -100,7 +111,7 @@
         .attr("id", d => d.seg)
         .style("width", d => width_scale(d[witnesses[i]].text.nchar) + "px");
 
-      // witness_shift(witnesses[i], get_source_witness(), get_diff_type());
+      witness_shift(witnesses[i], get_source_witness(), get_diff_type());
     }
 
     d3.selectAll("div.app")

@@ -7,9 +7,10 @@ div.app {
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
   margin-bottom: 1px;
-  height: 30px;
+  height: 10px;
   width: 0px;
-  background-color: gray;
+  background-color: lightgray;
+  border: 1px solid gray;
 }
 
 div.hovered {
