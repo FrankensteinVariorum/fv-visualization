@@ -99,12 +99,12 @@ for key, rawkeydicts in groupby(text_strings, key=itemgetter("seg")):
                     ]
                 )
                 diff_stats = {
-                    "additions": diff_additions,
-                    "deletions": diff_deletions,
-                    "replacements": diff_replacements,
+                    "additions": math.log(diff_additions + 1),
+                    "deletions": math.log(diff_deletions + 1),
+                    "replacements": math.log(diff_replacements + 1),
                     "balance": (diff_additions - diff_deletions)
                     / (len(target_text) + len(source_text) + 1),
-                    "aggregate": math.log(diff_additions + diff_deletions + diff_replacements + 1)
+                    "aggregate": diff_additions + diff_deletions + diff_replacements
                 }
             else:
                 diff_ops = None

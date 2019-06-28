@@ -34,8 +34,8 @@
     var mincombo = data.stats.balance.min
     var maxcombo = data.stats.balance.max
 
-    var add_scale = d3.scale.log().domain([1, maxadd]).range(["white", "purple"])
-    var del_scale = d3.scale.log().domain([1, maxdel]).range(["white", "orange"])
+    var add_scale = d3.scaleSequential(d3.interpolatePurples).domain([1, maxadd])
+    var del_scale = d3.scaleSequential(d3.interpolateOranges).domain([1, maxdel])
     var mincombo = data.stats.balance.min
     var mag_scale = d3.scaleDiverging(d3.interpolatePuOr).domain([mincombo, 0, maxcombo])
     var agg_scale = d3.scale.linear().domain([0, 1]).range([0.2, 1])
@@ -98,7 +98,7 @@
       d3.selectAll("div.app#" + d.seg)
         .classed("hovered", true)
       for (i = 0; i < witnesses.length; i++) {
-        d3.select("p.text-display#" + witnesses[i]).text(d.seg + ": " + truncate_string(d[witnesses[i]].text.content, 20000))
+        d3.select("p.text-display#" + witnesses[i]).text(d.seg + ": " + JSON.stringify(d[witnesses[i]].diffs[get_source_witness()].ops) + JSON.stringify(d[witnesses[i]].diffs[get_source_witness()].stats) + truncate_string(d[witnesses[i]].text.content, 20000))
       }
     }
 
