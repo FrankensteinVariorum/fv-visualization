@@ -14,7 +14,6 @@ text_strings = []
 for f in collation_chunks:
     chunk_text = etree.parse(f).getroot().xpath("//text()")
     for ct in chunk_text:
-      print(ct)
       if re.search(r"\n\s+$", ct) is None:
         if ct.is_text:
             # Pull seg ID
@@ -69,14 +68,14 @@ for key, rawkeydicts in groupby(text_strings, key=itemgetter("seg")):
                     [
                         o["b2"] - o["b1"]
                         for o in formatted_diff_ops
-                        if o["tag"] in ["insert", "replace"]
+                        if o["tag"] in ["insert"]
                     ]
                 )
                 diff_deletions = sum(
                     [
                         o["a2"] - o["a1"]
                         for o in formatted_diff_ops
-                        if o["tag"] in ["delete", "replace"]
+                        if o["tag"] in ["delete"]
                     ]
                 )
                 diff_stats = {
