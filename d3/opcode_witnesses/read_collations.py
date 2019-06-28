@@ -71,6 +71,12 @@ for key, rawkeydicts in groupby(text_strings, key=itemgetter("seg")):
                         for o in formatted_diff_ops
                         if o["tag"] in ["insert"]
                     ]
+                ) + sum (
+                    [
+                        o["b2"] - o["b1"]
+                        for o in formatted_diff_ops
+                        if o["tag"] in ["replace"]
+                    ]
                 )
                 diff_replacements = sum(
                     [
@@ -84,6 +90,12 @@ for key, rawkeydicts in groupby(text_strings, key=itemgetter("seg")):
                         o["a2"] - o["a1"]
                         for o in formatted_diff_ops
                         if o["tag"] in ["delete"]
+                    ]
+                ) + sum(
+                    [
+                        o["a2"] - o["a1"]
+                        for o in formatted_diff_ops
+                        if o["tag"] in ["replace"]
                     ]
                 )
                 diff_stats = {
@@ -128,7 +140,7 @@ for seg, segdicts in groupby(seg_texts, key=itemgetter("seg")):
             balance_ranges.append(d["diff_stats"]["balance"])
             aggregate_ranges.append(d["diff_stats"]["aggregate"])
             target_diffs[d["target_witness"]] = {
-                # "ops": d["diff_ops"],
+                "ops": d["diff_ops"],
                 "stats": d["diff_stats"]
             }
 
