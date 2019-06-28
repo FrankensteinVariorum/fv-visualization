@@ -14,30 +14,30 @@ text_strings = []
 for f in collation_chunks:
     chunk_text = etree.parse(f).getroot().xpath("//text()")
     for ct in chunk_text:
-      if re.search(r"\n\s+$", ct) is None:
-        if ct.is_text:
-            # Pull seg ID
-            text_ele = ct.getparent().get(
-                "{http://www.w3.org/XML/1998/namespace}id"
-            )
-        elif ct.is_tail:
-            # Suffixed seg ID
-            try:
-                text_ele = (
-                    ct.getparent().get("{http://www.w3.org/XML/1998/namespace}id")
-                    + "_tail"
+        if re.search(r"\n\s+$", ct) is None:
+            if ct.is_text:
+                # Pull seg ID
+                text_ele = ct.getparent().get(
+                    "{http://www.w3.org/XML/1998/namespace}id"
                 )
-            except:
-                continue
-        if text_ele is not None:
-            chunkname = re.search(r"_(C\d+)", f).groups()[0]
-            text_obj = {
-                "witness": "f" + re.search(r"f([A-Za-z0-9]+)?_", f).groups()[0],
-                "chunk": chunkname,
-                "seg": text_ele.split("-")[0],
-                "content": str(ct),
-            }
-            text_strings.append(text_obj)
+            elif ct.is_tail:
+                # Suffixed seg ID
+                try:
+                    text_ele = (
+                        ct.getparent().get("{http://www.w3.org/XML/1998/namespace}id")
+                        + "_tail"
+                    )
+                except:
+                    continue
+            if text_ele is not None:
+                chunkname = re.search(r"_(C\d+)", f).groups()[0]
+                text_obj = {
+                    "witness": "f" + re.search(r"f([A-Za-z0-9]+)?_", f).groups()[0],
+                    "chunk": chunkname,
+                    "seg": text_ele.split("-")[0],
+                    "content": str(ct),
+                }
+                text_strings.append(text_obj)
 text_strings.sort(key=itemgetter("seg"))
 witnesses = ["f1818", "f1823", "f1831", "fThomas"]
 seg_texts = []
@@ -81,11 +81,12 @@ for key, rawkeydicts in groupby(text_strings, key=itemgetter("seg")):
                 diff_stats = {
                     "additions": diff_additions,
                     "deletions": diff_deletions,
-                    "magnitude": diff_additions - diff_deletions,
+                    "balance": (diff_additions - diff_deletions)
+                    / (len(target_text) + len(source_text) + 1),
                 }
             else:
                 diff_ops = None
-                diff_stats = {"additions": 0, "deletions": 0, "magnitude": 0}
+                diff_stats = {"additions": 0, "deletions": 0, "balance": 0}
             res = {
                 "seg": key,
                 "source_witness": source_wit,
@@ -100,7 +101,7 @@ seg_texts.sort(key=itemgetter("seg"))
 final_output = {"segs": [], "stats": {}}
 addition_ranges = []
 deletion_ranges = []
-magnitude_ranges = []
+balance_ranges = []
 nchar_ranges = []
 for seg, segdicts in groupby(seg_texts, key=itemgetter("seg")):
     res = {"seg": seg}
@@ -111,7 +112,7 @@ for seg, segdicts in groupby(seg_texts, key=itemgetter("seg")):
         for d in sourcedicts:
             addition_ranges.append(d["diff_stats"]["additions"])
             deletion_ranges.append(d["diff_stats"]["deletions"])
-            magnitude_ranges.append(d["diff_stats"]["magnitude"])
+            balance_ranges.append(d["diff_stats"]["balance"])
             target_diffs[d["target_witness"]] = {
                 # "ops": d["diff_ops"],
                 "stats": d["diff_stats"]
@@ -140,9 +141,9 @@ final_output["stats"]["deletion"] = {
     "max": max([a for a in deletion_ranges if a is not None]),
 }
 
-final_output["stats"]["magnitude"] = {
-    "min": min([a for a in magnitude_ranges if a is not None]),
-    "max": max([a for a in magnitude_ranges if a is not None]),
+final_output["stats"]["balance"] = {
+    "min": min([a for a in balance_ranges if a is not None]),
+    "max": max([a for a in balance_ranges if a is not None]),
 }
 
 final_output["stats"]["nchar"] = {

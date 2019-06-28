@@ -5,7 +5,7 @@
   ]
 
   var source_witness = "f1818"
-  var diff_type = "magnitude"
+  var diff_type = "balance"
 
   function get_source_witness() {
     return source_witness
@@ -31,12 +31,12 @@
 
     var maxadd = data.stats.addition.max
     var maxdel = data.stats.deletion.max
-    var mincombo = data.stats.magnitude.min
-    var maxcombo = data.stats.magnitude.max
+    var mincombo = data.stats.balance.min
+    var maxcombo = data.stats.balance.max
 
     var add_scale = d3.scale.log().domain([1, maxadd]).range(["white", "purple"])
     var del_scale = d3.scale.log().domain([1, maxdel]).range(["white", "orange"])
-    var mincombo = data.stats.magnitude.min
+    var mincombo = data.stats.balance.min
     var mag_scale = d3.scaleDiverging(d3.interpolatePuOr).domain([mincombo, 0, maxcombo])
 
     function diff_scale(type) {
@@ -44,7 +44,7 @@
         return add_scale
       } else if (type == "deletions") {
         return del_scale
-      } else if (type == "magnitude") {
+      } else if (type == "balance") {
         return mag_scale
       }
     }
