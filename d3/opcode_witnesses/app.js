@@ -54,7 +54,7 @@
       d3.select(".wrapper#" + base_witness)
         .selectAll("div.app")
         .transition()
-        .duration(500)
+        .duration(2000)
         .style("background-color", d => diff_scale(difftype)(d[base_witness].diffs[reference_witness].stats[difftype]))
     }
 
