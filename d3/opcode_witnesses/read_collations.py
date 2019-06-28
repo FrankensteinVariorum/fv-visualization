@@ -91,10 +91,11 @@ for key, rawkeydicts in groupby(text_strings, key=itemgetter("seg")):
                     "replacements": diff_replacements,
                     "balance": (diff_additions - diff_deletions)
                     / (len(target_text) + len(source_text) + 1),
+                    "aggregate": (diff_additions + diff_deletions + diff_replacements) / (len(target_text) + len(source_text) + 1)
                 }
             else:
                 diff_ops = None
-                diff_stats = {"additions": 0, "deletions": 0, "replacements": 0, "balance": 0}
+                diff_stats = {"additions": 0, "deletions": 0, "replacements": 0, "balance": 0, "aggregate": 0}
             res = {
                 "seg": key,
                 "source_witness": source_wit,
@@ -111,6 +112,7 @@ addition_ranges = []
 deletion_ranges = []
 replacement_ranges = []
 balance_ranges = []
+aggregate_ranges = []
 nchar_ranges = []
 for seg, segdicts in groupby(seg_texts, key=itemgetter("seg")):
     res = {"seg": seg}
@@ -123,6 +125,7 @@ for seg, segdicts in groupby(seg_texts, key=itemgetter("seg")):
             deletion_ranges.append(d["diff_stats"]["deletions"])
             replacement_ranges.append(d["diff_stats"]["replacements"])
             balance_ranges.append(d["diff_stats"]["balance"])
+            aggregate_ranges.append(d["diff_stats"]["aggregate"])
             target_diffs[d["target_witness"]] = {
                 # "ops": d["diff_ops"],
                 "stats": d["diff_stats"]
@@ -159,6 +162,11 @@ final_output["stats"]["replacements"] = {
 final_output["stats"]["balance"] = {
     "min": min([a for a in balance_ranges if a is not None]),
     "max": max([a for a in balance_ranges if a is not None]),
+}
+
+final_output["stats"]["aggregate"] = {
+    "min": min([a for a in aggregate_ranges if a is not None]),
+    "max": max([a for a in aggregate_ranges if a is not None]),
 }
 
 final_output["stats"]["nchar"] = {
