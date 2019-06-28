@@ -5,6 +5,7 @@ from lxml import etree
 from difflib import SequenceMatcher
 from itertools import groupby
 from operator import itemgetter
+import math
 
 # Read and join all collation chunks
 collation_path = "../../../fv-data/variorum-chunks-tws/*.xml"
@@ -91,7 +92,7 @@ for key, rawkeydicts in groupby(text_strings, key=itemgetter("seg")):
                     "replacements": diff_replacements,
                     "balance": (diff_additions - diff_deletions)
                     / (len(target_text) + len(source_text) + 1),
-                    "aggregate": (diff_additions + diff_deletions + diff_replacements) / (len(target_text) + len(source_text) + 1)
+                    "aggregate": math.log(diff_additions + diff_deletions + diff_replacements + 1)
                 }
             else:
                 diff_ops = None
