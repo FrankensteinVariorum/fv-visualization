@@ -3,18 +3,19 @@
 }
 
 div.app {
-  box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  -webkit-box-sizing: border-box;
   margin-bottom: 3px;
-  margin-right: 0.1px;
-  height: 15px;
+  margin-right: 0.5px;
+  height: 10px;
   width: 0px;
   background-color: darkslategray;
 }
 
+div.hidden {
+  display: none;
+}
+
 div.hovered {
-  border: 1px solid red;
+  outline: 2px solid red;
 }
 
 button.witness-button {

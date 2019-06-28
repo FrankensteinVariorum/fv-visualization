@@ -119,6 +119,7 @@
         .enter()
         .append("div")
         .classed("app", true)
+        .classed("hidden", d => d[witnesses[i]].text.nchar <= 0)
         .attr("id", d => d.seg)
         .style("width", d => width_scale(d[witnesses[i]].text.nchar) + "px");
 
