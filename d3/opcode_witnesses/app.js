@@ -38,6 +38,7 @@
     var del_scale = d3.scale.log().domain([1, maxdel]).range(["white", "orange"])
     var mincombo = data.stats.balance.min
     var mag_scale = d3.scaleDiverging(d3.interpolatePuOr).domain([mincombo, 0, maxcombo])
+    var agg_scale = d3.scale.linear().domain([0, 1]).range([0.2, 1])
 
     function diff_scale(type) {
       if (type == "additions") {
