@@ -71,6 +71,13 @@ for key, rawkeydicts in groupby(text_strings, key=itemgetter("seg")):
                         if o["tag"] in ["insert"]
                     ]
                 )
+                diff_replacements = sum(
+                    [
+                        (o["a2"] - o["a1"])
+                        for o in formatted_diff_ops
+                        if o["tag"] in ["replace"]
+                    ]
+                )
                 diff_deletions = sum(
                     [
                         o["a2"] - o["a1"]
@@ -81,12 +88,13 @@ for key, rawkeydicts in groupby(text_strings, key=itemgetter("seg")):
                 diff_stats = {
                     "additions": diff_additions,
                     "deletions": diff_deletions,
+                    "replacements": diff_replacements,
                     "balance": (diff_additions - diff_deletions)
                     / (len(target_text) + len(source_text) + 1),
                 }
             else:
                 diff_ops = None
-                diff_stats = {"additions": 0, "deletions": 0, "balance": 0}
+                diff_stats = {"additions": 0, "deletions": 0, "replacements": 0, "balance": 0}
             res = {
                 "seg": key,
                 "source_witness": source_wit,
@@ -101,6 +109,7 @@ seg_texts.sort(key=itemgetter("seg"))
 final_output = {"segs": [], "stats": {}}
 addition_ranges = []
 deletion_ranges = []
+replacement_ranges = []
 balance_ranges = []
 nchar_ranges = []
 for seg, segdicts in groupby(seg_texts, key=itemgetter("seg")):
@@ -112,6 +121,7 @@ for seg, segdicts in groupby(seg_texts, key=itemgetter("seg")):
         for d in sourcedicts:
             addition_ranges.append(d["diff_stats"]["additions"])
             deletion_ranges.append(d["diff_stats"]["deletions"])
+            replacement_ranges.append(d["diff_stats"]["replacements"])
             balance_ranges.append(d["diff_stats"]["balance"])
             target_diffs[d["target_witness"]] = {
                 # "ops": d["diff_ops"],
@@ -139,6 +149,11 @@ final_output["stats"]["addition"] = {
 final_output["stats"]["deletion"] = {
     "min": min([a for a in deletion_ranges if a is not None]),
     "max": max([a for a in deletion_ranges if a is not None]),
+}
+
+final_output["stats"]["replacements"] = {
+    "min": min([a for a in replacement_ranges if a is not None]),
+    "max": max([a for a in replacement_ranges if a is not None]),
 }
 
 final_output["stats"]["balance"] = {
