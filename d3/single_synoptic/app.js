@@ -30,7 +30,7 @@
     var minchange = d3.min(data, d => d3.min([d.f1818_f1818, d.f1818_f1823, d.f1818_f1831, d.f1818_fMS, d.f1818_fThomas, d.f1823_f1818, d.f1823_f1823, d.f1823_f1831, d.f1823_fMS, d.f1823_fThomas, d.f1831_f1818, d.f1831_f1823, d.f1831_f1831, d.f1831_fMS, d.f1831_fThomas, d.fMS_f1818, d.fMS_f1823, d.fMS_f1831, d.fMS_fMS, d.fMS_fThomas, d.fThomas_f1818, d.fThomas_f1823, d.fThomas_f1831, d.fThomas_fMS, d.fThomas_fThomas]))
     var maxchange = d3.max(data, d => d3.max([d.f1818_f1818, d.f1818_f1823, d.f1818_f1831, d.f1818_fMS, d.f1818_fThomas, d.f1823_f1818, d.f1823_f1823, d.f1823_f1831, d.f1823_fMS, d.f1823_fThomas, d.f1831_f1818, d.f1831_f1823, d.f1831_f1831, d.f1831_fMS, d.f1831_fThomas, d.fMS_f1818, d.fMS_f1823, d.fMS_f1831, d.fMS_fMS, d.fMS_fThomas, d.fThomas_f1818, d.fThomas_f1823, d.fThomas_f1831, d.fThomas_fMS, d.fThomas_fThomas]))
 
-    var col_scale = d3.scaleDiverging(d3.interpolatePuOr).domain([minchange, 0, maxchange])
+    var col_scale = d3.scaleDiverging(d3.interpolatePuOr).domain([maxchange, 0, minchange])
 
     function witness_shift(from, to) {
       console.log(from + ">" + to)
