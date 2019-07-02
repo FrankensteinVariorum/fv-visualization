@@ -14,6 +14,7 @@ collation_chunks = glob(collation_path)
 text_strings = []
 for f in collation_chunks:
     chunk_text = etree.parse(f).getroot().xpath("//text()")
+    chunk_pos = [0]
     for i, ct in enumerate(chunk_text):
         if re.search(r"\n\s+$", ct) is None:
             if ct.is_text:
@@ -36,9 +37,11 @@ for f in collation_chunks:
                     "witness": "f" + re.search(r"f([A-Za-z0-9]+)?_", f).groups()[0],
                     "chunk": chunkname,
                     "index": i,
+                    "start_pos": sum(chunk_pos),
                     "seg": text_ele.split("-")[0],
                     "content": str(ct),
                 }
+                chunk_pos.append(len(str(ct)))
                 text_strings.append(text_obj)
 text_strings.sort(key=itemgetter("seg"))
 witnesses = ["f1818", "f1823", "f1831", "fThomas"]
@@ -52,9 +55,12 @@ for key, rawkeydicts in groupby(text_strings, key=itemgetter("seg")):
             ][0]
             source_index = [
                 t["index"] for t in keydicts if t["witness"] == source_wit][0]
+            source_pos = [
+                t["start_pos"] for t in keydicts if t["witness"] == source_wit][0]
         except:
             source_text = ""
             source_index = None
+            source_pos = None
         for target_wit in witnesses:
             try:
                 target_text = [
@@ -63,9 +69,13 @@ for key, rawkeydicts in groupby(text_strings, key=itemgetter("seg")):
                 target_index = [
                     a["index"] for a in keydicts if a["witness"] == target_wit
                 ][0]
+                target_pos = [
+                    a["start_pos"] for a in keydicts if a["witness"] == target_wit
+                ][0]
             except:
                 target_text = ""
                 target_index = None
+                target_pos = None
             if source_text is not None and target_text is not None:
                 seqer = SequenceMatcher(lambda x: x == " ", source_text, target_text)
                 diff_ops = seqer.get_opcodes()
@@ -122,9 +132,11 @@ for key, rawkeydicts in groupby(text_strings, key=itemgetter("seg")):
                 "source_witness": source_wit,
                 "source_text": source_text,
                 "source_index": source_index,
+                "source_pos": source_pos,
                 "target_witness": target_wit,
                 "target_text": target_text,
                 "target_index": target_index,
+                "target_pos": target_pos,
                 "diff_ops": formatted_diff_ops,
                 "diff_stats": diff_stats,
             }
@@ -204,5 +216,5 @@ final_output["stats"]["nchar"] = {
 with open("diffs.json", "w") as o:
     json.dump(final_output, o, indent=2)
 
-# with open("out.json", "w") as o:
-#   json.dump(seg_texts, o, indent = 2)
+with open("out.json", "w") as o:
+  json.dump(seg_texts, o, indent = 2)

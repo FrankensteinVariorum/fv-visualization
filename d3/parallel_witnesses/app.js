@@ -5,67 +5,49 @@
   ]
 
   function draw_apps(data) {
-
-    var length_scale = d3.scale.linear().domain([0, maxNchar]).range([0, 600])
-
-    var maxadd = data.stats.addition.max
-    var maxdel = data.stats.deletion.max
-    var mincombo = data.stats.balance.min
-    var maxcombo = data.stats.balance.max
-
-    var add_scale = d3.scaleSequential(d3.interpolateOranges).domain([1, maxadd])
-    var del_scale = d3.scaleSequential(d3.interpolatePurples).domain([1, maxdel])
-    var mincombo = data.stats.balance.min
-    var mag_scale = d3.scaleDiverging(d3.interpolatePuOr).domain([mincombo, 0, maxcombo])
-    var agg_scale = d3.scale.linear().domain([0, 1]).range([0.2, 1])
-
-    function diff_scale(type) {
-      if (type == "additions") {
-        return add_scale
-      } else if (type == "deletions") {
-        return del_scale
-      } else if (type == "balance") {
-        return mag_scale
+    
+    var segs_by_wit = d3.nest()
+    .key(d => d.source_witness)
+    .key(d => d.seg)
+    .rollup(function(l) {
+      return {
+        "text": d3.max(l, d => d.source_text),
+        "index": d3.max(l, d => d.source_index),
+        "pos": d3.max(l, d => d.source_pos)
       }
-    }
+    })
+    .sortValues(function(a, b) { return a.pos - b.pos })
+    .entries(data)
+    console.log(JSON.stringify(segs_by_wit))
 
+    var max_nchar = d3.max(data, d => d.source_text.length)
+    var max_pos = d3.max(data, d => d.source_pos)
+    var length_scale = d3.scale.linear().domain([0, max_pos]).range([2, 800])
+    var collength_scale = d3.scaleSequential(d3.interpolatePlasma).domain([0, max_nchar])
+    var wit_scale = d3.scaleBand().domain(witnesses).range([0, 900])
+    var radius_scale = d3.scale.linear().domain([0, max_nchar]).range([0, 100])
+    var pos_scale = d3.scaleSequential(d3.interpolatePlasma).domain([0, max_pos])
 
-
-    function app_hover(d) {
-      d3.selectAll("div.app#" + d.seg)
-        .classed("hovered", true)
-      for (i = 0; i < witnesses.length; i++) {
-        d3.select("p.text-display#" + witnesses[i]).text(d.seg + ": " + JSON.stringify(d[witnesses[i]].diffs[get_source_witness()].ops) + JSON.stringify(d[witnesses[i]].diffs[get_source_witness()].stats) + truncate_string(d[witnesses[i]].text.content, 20000))
-      }
-    }
-
-    function app_nohover(d) {
-      d3.selectAll("div.app#" + d.seg)
-        .classed("hovered", false)
-    };
-
-    d3.selectAll("button.witness-button")
-      .on("click", witness_button_click);
-
-    d3.selectAll("button.diff-button")
-      .on("click", diff_button_click);
-
-
-    d3.select("svg#")
+    d3.select("svg#pc")
       .append("g")
       .attr("id", "variorumG")
-      .attr("transform", "translate(50, 300)")
+      // .attr("transform", "translate(50, 300)")
       .selectAll("g")
-      .data(data.segs)
+      .data(data)
       .enter()
-      .append("g")
-      .attr("class", "app")
-      .classed("hidden", d => d[witnesses[i]].text.nchar <= 0)
-      .attr("id", d => d.seg)
-      .style("width", d => width_scale(d[witnesses[i]].text.nchar) + "px")
+      .append("rect")
+      .filter(d => d.source_pos > 0)
+      .attr("class", "seg")
+      .attr("id", d => d.source_witness + d.seg)
+      .attr("x", (d, i) => wit_scale(d.source_witness))
+      .attr("y", (d, i) => length_scale(d.source_pos))
+      .attr("height", d => radius_scale(d.source_text.length))
+      .attr("width", 40)
+      .style("fill", d => collength_scale(d.source_text.length))
+      .style("stroke", )
   }
 
-  d3.json("diffs.json", function (error, data) {
+  d3.json("out.json", function (error, data) {
     if (error) {
       console.error(error)
     } else {
