@@ -10,6 +10,7 @@ import math
 # Read and join all collation chunks
 collation_path = "../../../fv-data/variorum-chunks-tws/*.xml"
 collation_chunks = glob(collation_path)
+sorted_collation_chunks = sorted(collation_chunks, key = lambda x: int(re.search(r"_C(\d+)", x).groups()[0]))
 
 text_strings = []
 chunk_pos = {
@@ -18,7 +19,7 @@ chunk_pos = {
     "f1831": [0],
     "fThomas": [0]
 }
-for f in collation_chunks:
+for f in sorted_collation_chunks:
     chunk_text = etree.parse(f).getroot().xpath("//text()")
     for i, ct in enumerate(chunk_text):
         if re.search(r"\n\s+$", ct) is None:

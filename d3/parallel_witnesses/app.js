@@ -25,11 +25,18 @@
 
     var max_nchar = d3.max(data, d => d.source_text.length)
     var max_pos = d3.max(data, d => d.source_pos)
+    var min_balance = d3.min(data, d => d.diff_stats.balance)
+    var max_balance = d3.max(data, d => d.diff_stats.balance)
+    console.log(min_balance)
+    console.log(max_balance)
+
     var length_scale = d3.scaleLinear().domain([0, max_pos]).range([2, 850])
     var collength_scale = d3.scaleSequential(d3.interpolatePlasma).domain([0, max_nchar])
     var wit_scale = d3.scalePoint().domain(witnesses).range([0, 1200])
     var pos_scale = d3.scaleSequential(d3.interpolatePlasma).domain([0, max_pos])
-    var change_scale = d3.scaleDiverging(d3.interpolatePuOr)
+    var change_scale = d3.scaleDiverging(d3.interpolateSpectral).domain([min_balance, 0, max_balance])
+    var width_scale = d3.scaleLinear().domain([min_balance, max_balance]).range([0.5, 4])
+    var opacity_scale = d3.scaleLinear().domain([min_balance, max_balance]).range([0.1, 0.8])
 
     var wit_axis = d3.axisBottom(wit_scale)
     var word_axis = d3.axisLeft(length_scale)
@@ -65,6 +72,8 @@
       .attr("y1", d => length_scale(d.source_pos))
       .attr("y2", d => length_scale(d.target_pos))
       .attr("stroke", d => change_scale(d.diff_stats.balance))
+      .style("opacity", d => opacity_scale(Math.abs(d.diff_stats.balance)))
+      .style("stroke-width", d => width_scale(Math.abs(d.diff_stats.balance)))
 
     function line_hover(d) {
       d3.selectAll("line." + d.seg)
@@ -73,9 +82,9 @@
     }
 
     function line_no_hover(d) {
-      d3.selectAll("line")
-        .style("stroke-width", null)
-        .style("opacity", null)
+      d3.selectAll("line." + d.seg)
+        .style("opacity", d => Math.abs(d.diff_stats.balance))
+        .style("stroke-width", d => width_scale(Math.abs(d.diff_stats.balance)))
     }
 
     d3.selectAll("line.seg_comparison")
