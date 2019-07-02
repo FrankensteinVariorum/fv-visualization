@@ -33,16 +33,26 @@
     var change_scale = d3.scaleDiverging(d3.interpolatePuOr)
 
     var wit_axis = d3.axisBottom(wit_scale)
+    var word_axis = d3.axisLeft(length_scale)
 
     d3.select("svg#pc")
       .attr("width", 1440)
       .attr("height", 900)
       .append("g")
-      .attr("id", "variorumG")
-      .attr("transform", "translate(0, 800)")
+      .attr("id", "var_x")
+      .attr("transform", "translate(60, 880)")
       .call(wit_axis)
 
     d3.select("svg#pc")
+      .append("g")
+      .attr("id", "var_y")
+      .attr("transform", "translate(40, 10)")
+      .call(word_axis)
+
+    d3.select("svg#pc")
+      .append("g")
+      .attr("id", "var_content")
+      .attr("transform", "translate(60, 10)")
       .selectAll("line")
       .data(data)
       .enter()
