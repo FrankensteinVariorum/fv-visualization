@@ -3,18 +3,16 @@ svg#pc {
   height: 900px;
 }
 
-.seg {
-  opacity: 0.3;
+.seg_comparison {
+  opacity: 0.1;
+  stroke-width: 1.5px;
 }
 
 div.hidden {
   display: none;
 }
 
-div.hovered {
-  outline: 2px solid red;
-}
-
-button.witness-button {
-  margin-bottom: 1rem;
+line.hovered {
+  opacity: 1;
+  stroke-width: 5px;
 }
