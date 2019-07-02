@@ -1,0 +1,19 @@
+.wrapper {
+  /* width: 500px; */
+}
+
+.app {
+
+}
+
+div.hidden {
+  display: none;
+}
+
+div.hovered {
+  outline: 2px solid red;
+}
+
+button.witness-button {
+  margin-bottom: 1rem;
+}

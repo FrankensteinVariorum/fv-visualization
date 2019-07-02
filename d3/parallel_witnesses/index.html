@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>Synoptic Frankenstein</title>
+    <meta charset="utf-8" />
+    <script type="text/javascript" src="https://d3js.org/d3.v3.js"></script>
+    <script src="https://d3js.org/d3-array.v2.min.js"></script>
+    <script src="https://d3js.org/d3-color.v1.min.js"></script>
+    <script src="https://d3js.org/d3-format.v1.min.js"></script>
+    <script src="https://d3js.org/d3-interpolate.v1.min.js"></script>
+    <script src="https://d3js.org/d3-time.v1.min.js"></script>
+    <script src="https://d3js.org/d3-time-format.v2.min.js"></script>
+    <script src="https://d3js.org/d3-scale.v3.min.js"></script>
+    <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="style.css" />
+
+  </head>
+
+  <body>
+    <p><a href="/fv-visualization">Back to index</a></p>
+
+    <div class="container-fluid">
+      <h1>d3 Prototype 3: All witnesses</h1>
+      <div class="card">
+        <div class="card-header">
+          Prototype viewer comparing all witnesses. Whichever witness is selected as a source, the others will recolor
+          to represent the relative number of
+          <strong style="color:rgb(45, 0, 75);">deletions</strong> vs <strong
+            style="color:rgb(127, 59, 8);;">additions</strong> required to the visualized witness' version of the text,
+          to the verion in the selected witness.
+        </div>
+        <div class="card-body">
+          <svg id="pc"></svg>
+        </div>
+      </div>
+      <div class="card-footer">
+        <small>Matthew Lincoln for dSHARP @ CMU</small>
+      </div>
+    </div>
+
+  </body>
+  <script type="text/javascript" src="app.js"></script>
+
+</html>
