@@ -12,9 +12,14 @@ collation_path = "../../../fv-data/variorum-chunks-tws/*.xml"
 collation_chunks = glob(collation_path)
 
 text_strings = []
+chunk_pos = {
+    "f1818": [0],
+    "f1823": [0],
+    "f1831": [0],
+    "fThomas": [0]
+}
 for f in collation_chunks:
     chunk_text = etree.parse(f).getroot().xpath("//text()")
-    chunk_pos = [0]
     for i, ct in enumerate(chunk_text):
         if re.search(r"\n\s+$", ct) is None:
             if ct.is_text:
@@ -33,15 +38,16 @@ for f in collation_chunks:
                     continue
             if text_ele is not None:
                 chunkname = re.search(r"_(C\d+)", f).groups()[0]
+                wit = "f" + re.search(r"f([A-Za-z0-9]+)?_", f).groups()[0]
                 text_obj = {
-                    "witness": "f" + re.search(r"f([A-Za-z0-9]+)?_", f).groups()[0],
+                    "witness": wit,
                     "chunk": chunkname,
                     "index": i,
-                    "start_pos": sum(chunk_pos),
+                    "start_pos": sum(chunk_pos[wit]),
                     "seg": text_ele.split("-")[0],
                     "content": str(ct),
                 }
-                chunk_pos.append(len(str(ct)))
+                chunk_pos[wit].append(len(str(ct)))
                 text_strings.append(text_obj)
 text_strings.sort(key=itemgetter("seg"))
 witnesses = ["f1818", "f1823", "f1831", "fThomas"]
@@ -127,6 +133,7 @@ for key, rawkeydicts in groupby(text_strings, key=itemgetter("seg")):
             else:
                 diff_ops = None
                 diff_stats = {"additions": 0, "deletions": 0, "replacements": 0, "balance": 0, "aggregate": 0}
+
             res = {
                 "seg": key,
                 "source_witness": source_wit,

@@ -18,7 +18,6 @@
       })
       .sortValues(function (a, b) { return a.pos - b.pos })
       .entries(data)
-    console.log(JSON.stringify(segs_by_wit))
 
     function seq_wit_filter(d) {
       return (d.source_witness == "f1818" && d.target_witness == "f1823") || (d.source_witness == "f1823" && d.target_witness == "f1831") || (d.source_witness == "f1831" && d.target_witness == "fThomas")
