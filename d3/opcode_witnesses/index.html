@@ -29,13 +29,14 @@
         <div class="card-header">
           Prototype viewer comparing all witnesses. Whichever witness is selected as a source, the others will recolor
           to represent the relative number of
-          <strong style="color:rgb(45, 0, 75);">deletions</strong> vs <strong
-            style="color:rgb(127, 59, 8);;">additions</strong> required to the visualized witness' version of the text, to the verion in the selected witness.
+          <strong style="color:rgb(45, 0, 75);">additions</strong> vs <strong
+            style="color:rgb(127, 59, 8);;">deletions</strong> required to get from the selected witness to the other
+          visualized ones.
         </div>
         <div class="card-body">
           <div class="row">
-            <button type="button" class="btn btn-secondary diff-button" id="additions">Additions</button>
-            <button type="button" class="btn btn-secondary diff-button" id="deletions">Deletions</button>
+            <button type="button" class="btn btn-secondary diff-button" id="additions">Deletions</button>
+            <button type="button" class="btn btn-secondary diff-button" id="deletions">Additions</button>
             <button type="button" class="btn btn-secondary diff-button active" id="balance">Difference</button>
           </div>
           <div class="row">

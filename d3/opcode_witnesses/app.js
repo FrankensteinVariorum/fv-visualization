@@ -98,7 +98,8 @@
       d3.selectAll("div.app#" + d.seg)
         .classed("hovered", true)
       for (i = 0; i < witnesses.length; i++) {
-        d3.select("p.text-display#" + witnesses[i]).text(d.seg + ": " + JSON.stringify(d[witnesses[i]].diffs[get_source_witness()].ops) + JSON.stringify(d[witnesses[i]].diffs[get_source_witness()].stats) + truncate_string(d[witnesses[i]].text.content, 20000))
+        d3.select("p.text-display#" + witnesses[i])
+          .text(d.seg + ": " + d[witnesses[i]].text.content)
       }
     }
 
