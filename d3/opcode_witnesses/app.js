@@ -29,13 +29,15 @@
     var maxNchar = data.stats.nchar.max
     var width_scale = d3.scale.linear().domain([0, maxNchar]).range([0, 200])
 
+    var minadd = data.stats.addition.min
     var maxadd = data.stats.addition.max
+    var mindel = data.stats.deletion.min
     var maxdel = data.stats.deletion.max
     var mincombo = data.stats.balance.min
     var maxcombo = data.stats.balance.max
 
-    var add_scale = d3.scaleSequential(d3.interpolateOranges).domain([1, maxadd])
-    var del_scale = d3.scaleSequential(d3.interpolatePurples).domain([1, maxdel])
+    var add_scale = d3.scaleSequential(d3.interpolateOranges).domain([minadd, maxadd])
+    var del_scale = d3.scaleSequential(d3.interpolatePurples).domain([mindel, maxdel])
     var mincombo = data.stats.balance.min
     var mag_scale = d3.scaleDiverging(d3.interpolatePuOr).domain([mincombo, 0, maxcombo])
     var agg_scale = d3.scale.linear().domain([0, 1]).range([0.2, 1])
@@ -50,12 +52,26 @@
       }
     }
 
+    function entries(obj) {
+      for (key in Object.keys(obj)) {
+        return [key, obj[key]];
+      }
+    }
+
     function witness_shift(base_witness, reference_witness, difftype) {
-      d3.select(".wrapper#" + base_witness)
-        .selectAll("div.app")
-        .transition()
-        .duration(2000)
-        .style("background-color", d => diff_scale(difftype)(d[base_witness].diffs[reference_witness].stats[difftype]))
+      if (base_witness == reference_witness) {
+        d3.select(".wrapper#" + base_witness)
+          .selectAll("div.app")
+          .transition()
+          .duration(2000)
+          .style("background-color", d => diff_scale(difftype)(d3.mean(Object.values(d[base_witness].diffs), v => v.stats[difftype])))
+      } else {
+        d3.select(".wrapper#" + base_witness)
+          .selectAll("div.app")
+          .transition()
+          .duration(2000)
+          .style("background-color", d => diff_scale(difftype)(d[base_witness].diffs[reference_witness].stats[difftype]))
+      }
     }
 
     function witness_button_click() {
